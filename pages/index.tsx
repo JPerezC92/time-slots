@@ -1,10 +1,10 @@
 import { FC } from 'react';
 import type { NextPage } from 'next';
-import { useGetMotorcyclistAvailableCount } from 'src/Motorcyclists/Infrastructure/controllers/useGetMotorcyclistAvailableCount';
+
+import { MotorcyclistAvailableCounter } from 'src/Motorcyclists/Infrastructure/components/MotorcyclistAvailableCounter';
 import styles from './Index.module.scss';
 
 const Home: NextPage = () => {
-  const motorcyclistAvailableCount = useGetMotorcyclistAvailableCount();
   const timeSlot = [
     { start: '8:00 am', end: '8:30 am' },
     { start: '8:30 am', end: '9:00 am' },
@@ -35,26 +35,27 @@ const Home: NextPage = () => {
   return (
     <div>
       <h1>Home </h1>
-      <h1>motorcyclistAvailableCount {motorcyclistAvailableCount} </h1>
-      <table className={`${styles.TimeSlotsTable}`}>
+      <MotorcyclistAvailableCounter />
+
+      {/* <table className={`${styles.TimeSlotsTable}`}>
         <tbody>
           {timeSlot.map((slot) => (
             <TimeSlotRow key={`${slot.start} ${slot.end}`} Slot={slot} />
           ))}
         </tbody>
-      </table>
+      </table> */}
     </div>
   );
 };
 
 export default Home;
 
-const TimeSlotRow: FC<{ Slot: { start: string; end: string } }> = ({
-  Slot,
-}) => {
-  return (
-    <tr className={styles.TimeSlotsRow}>
-      {Slot.start} - {Slot.end}
-    </tr>
-  );
-};
+// const TimeSlotRow: FC<{ Slot: { start: string; end: string } }> = ({
+//   Slot,
+// }) => {
+//   return (
+//     <tr className={styles.TimeSlotsRow}>
+//       {Slot.start} - {Slot.end}
+//     </tr>
+//   );
+// };

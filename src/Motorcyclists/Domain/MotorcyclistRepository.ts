@@ -1,4 +1,4 @@
-import { Motorcyclist } from "./Motorcyclists";
+import { Motorcyclist } from './Motorcyclists';
 
 export interface MotorcyclistRepository {
   findOneAvailable(): Promise<Motorcyclist>;
