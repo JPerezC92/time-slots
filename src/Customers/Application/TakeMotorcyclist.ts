@@ -1,12 +1,11 @@
-import { MotorcyclistAvailableFinder } from "src/Motorcyclists/Application/MotorcyclistAvailableFinder";
-import { MotorcyclistRepository } from "src/Motorcyclists/Domain/MotorcyclistRepository";
-import { Motorcyclist } from "src/Motorcyclists/Domain/Motorcyclists";
-import { UseCase } from "src/Shared/Domain/UseCase";
-import { Customer } from "../Domain/Customer";
-import { CustomerRepository } from "../Domain/CustomerRepository";
+import { MotorcyclistAvailableFinder } from 'src/Motorcyclists/Application/MotorcyclistAvailableFinder';
+import { MotorcyclistRepository } from 'src/Motorcyclists/Domain/MotorcyclistRepository';
+import { Motorcyclist } from 'src/Motorcyclists/Domain/Motorcyclists';
+import { UseCase } from 'src/Shared/Domain/UseCase';
+import { Customer } from '../Domain/Customer';
 
 export interface TakeMotorcyclistOutput<Presenter> {
-  show(): Presenter;
+  show(props: { motorcyclist: Motorcyclist }): Presenter;
 }
 
 export interface TakeMotorcyclistInputPort {
@@ -17,18 +16,15 @@ export class TakeMotorcyclist<Presenter>
   implements UseCase<Promise<Presenter>, TakeMotorcyclistInputPort>
 {
   private readonly _motorcyclistRepository: MotorcyclistRepository;
-  private readonly _customerRepository: CustomerRepository;
   private readonly _presenter: TakeMotorcyclistOutput<Presenter>;
 
   private readonly _motorcyclistAvailableFinder: MotorcyclistAvailableFinder<Motorcyclist>;
 
   constructor(props: {
     motorcyclistRepository: MotorcyclistRepository;
-    customerRepository: CustomerRepository;
     presenter: TakeMotorcyclistOutput<Presenter>;
   }) {
     this._motorcyclistRepository = props.motorcyclistRepository;
-    this._customerRepository = props.customerRepository;
     this._presenter = props.presenter;
 
     this._motorcyclistAvailableFinder = new MotorcyclistAvailableFinder({
@@ -42,6 +38,6 @@ export class TakeMotorcyclist<Presenter>
 
     customer.TakeMotorcyclist(motorcyclist);
 
-    return this._presenter.show();
+    return this._presenter.show({ motorcyclist });
   }
 }

@@ -1,4 +1,3 @@
-export interface MotorcyclistState {
-  count: number;
+export interface MotorcyclistStore {
   updateCount(count: number): void;
 }

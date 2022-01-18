@@ -1,15 +1,22 @@
-import { Motorcyclist } from "src/Motorcyclists/Domain/Motorcyclists";
-import { CustomerId } from "./CustomerId";
+import { Motorcyclist } from 'src/Motorcyclists/Domain/Motorcyclists';
+import { CustomerId } from './CustomerId';
+import { CustomerName } from './CustomerName';
 
 export class Customer {
   private readonly _customerId: CustomerId;
-
-  constructor(props: { customerId: CustomerId }) {
-    this._customerId = props.customerId;
-  }
+  private readonly _customerName: CustomerName;
 
   public get id(): string {
     return this._customerId.value;
+  }
+
+  public get name(): string {
+    return this._customerName.value;
+  }
+
+  constructor(props: { customerId: CustomerId; customerName: CustomerName }) {
+    this._customerId = props.customerId;
+    this._customerName = props.customerName;
   }
 
   public TakeMotorcyclist(motorcyclist: Motorcyclist): void {

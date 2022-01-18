@@ -1,8 +1,8 @@
 {
   "name": "time-slots-frontend",
   "private": true,
-  "scripts": { 
-    "debugger": "NODE_OPTIONS='--inspect' next dev",
+  "scripts": {
+    "debugger": "cross-env NODE_OPTIONS='--inspect' next dev",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -22,6 +22,7 @@
     "@types/react": "17.0.38",
     "@typescript-eslint/eslint-plugin": "5.9.1",
     "@typescript-eslint/parser": "5.9.1",
+    "cross-env": "^7.0.3",
     "eslint": "8.6.0",
     "eslint-config-next": "12.0.8",
     "eslint-config-prettier": "8.3.0",

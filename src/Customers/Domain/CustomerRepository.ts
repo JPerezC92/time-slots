@@ -1,5 +1,6 @@
-import { Customer } from "./Customer";
+import { Customer } from './Customer';
+import { CustomerId } from './CustomerId';
 
 export interface CustomerRepository {
-  findById(id: string): Promise<Customer | null>;
+  findById(id: CustomerId): Promise<Customer>;
 }

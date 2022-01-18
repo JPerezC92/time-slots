@@ -1,14 +1,16 @@
-import { useEffect, useState } from 'react';
-import { MotorcyclistAvailableCounter } from 'src/Motorcyclists/Application/MotorcyclistAvailableCounter';
+import { useCallback, useEffect, useState } from 'react';
+
 import { FirestoreMotorcyclistRepository } from '../FirestoreMotorcyclistRepository';
-import { useZustandMotorcyclistState } from '../ZustandMotorcyclistState';
+import { MotorcyclistAvailableCounter } from 'src/Motorcyclists/Application/MotorcyclistAvailableCounter';
+import { useZustandMotorcyclistStore } from '../useMotorcyclistStore';
 
 export const useGetMotorcyclistAvailableCount = () => {
-  const motorcyclistState = useZustandMotorcyclistState((state) => state);
-  const [isLoading, setIsLoading] = useState(true);
-  const refetch = () => {
+  const motorcyclistStore = useZustandMotorcyclistStore();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const run = useCallback(() => {
     setIsLoading(true);
-  };
+  }, []);
 
   useEffect(() => {
     if (isLoading) {
@@ -17,7 +19,7 @@ export const useGetMotorcyclistAvailableCount = () => {
         const motorcyclistAvailableCounter = new MotorcyclistAvailableCounter({
           motorcyclistRepository,
           presenter: { show: (data) => data },
-          motorcyclistState,
+          motorcyclistStore,
         });
 
         await motorcyclistAvailableCounter.execute();
@@ -27,7 +29,7 @@ export const useGetMotorcyclistAvailableCount = () => {
 
       getCount();
     }
-  }, [isLoading, motorcyclistState]);
+  }, [isLoading, motorcyclistStore]);
 
-  return { count: motorcyclistState.count, isLoading, refetch };
+  return { isLoading, run };
 };

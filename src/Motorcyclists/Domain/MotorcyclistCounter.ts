@@ -1,4 +1,4 @@
-import { Motorcyclist } from "./Motorcyclists";
+import { Motorcyclist } from './Motorcyclists';
 
 export class MotorcyclistCounter {
   private readonly _motorcyclistCollection: Motorcyclist[];
