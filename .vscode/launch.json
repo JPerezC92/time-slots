@@ -5,12 +5,11 @@
       "name": "Next.js: debug server-side",
       "type": "node-terminal",
       "request": "launch",
-      "reAttach": true,
       "command": "npm run dev"
     },
     {
       "name": "Next.js: debug client-side",
-      "type": "firefox",
+      "type": "pwa-chrome",
       "request": "launch",
       "url": "http://localhost:3000",
       "pathMappings": [
@@ -29,7 +28,7 @@
       "serverReadyAction": {
         "pattern": "started server on .+, url: (https?://.+)",
         "uriFormat": "%s",
-        "action": "debugWithEdge"
+        "action": "debugWithChrome"
       }
     }
   ]

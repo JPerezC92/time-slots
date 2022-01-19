@@ -1,19 +1,24 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
-import { timeSlot } from './timeslotsColl';
+import { MotorcyclistAvailableCounter } from 'src/Motorcyclists/Infrastructure/components/MotorcyclistAvailableCounter';
 import { TimeSlotRow } from 'pages/TimeSlotRow';
+import { useFindTimeSlots } from 'src/TimeSlot/Infrastructure/controllers/useFindTimeSlots';
+import { useTimeSlotViewStore } from 'src/TimeSlot/Infrastructure/ZustandTimeSlotStore';
 
 import styles from './TimeSlotScreen.module.scss';
-import { MotorcyclistAvailableCounter } from 'src/Motorcyclists/Infrastructure/components/MotorcyclistAvailableCounter';
-
-// interface Props {}
 
 export const TimeSlotScreen: FC = () => {
+  const findTimeSlots = useFindTimeSlots();
+  const { timeSlotCollection } = useTimeSlotViewStore();
+
+  useEffect(() => {
+    findTimeSlots.run();
+  }, [findTimeSlots]);
+
   return (
     <div>
       <h1>TimeSlotScreen</h1>
       <MotorcyclistAvailableCounter />
-      {/* <pre>{JSON.stringify(timeSlot, null, 2)}</pre> */}
 
       <table className={`${styles.TimeSlotsTable}`}>
         <thead>
@@ -22,8 +27,8 @@ export const TimeSlotScreen: FC = () => {
           </tr>
         </thead>
         <tbody>
-          {timeSlot.map((slot) => (
-            <TimeSlotRow key={`${slot.start}-${slot.end}`} slot={slot} />
+          {timeSlotCollection.map((slot) => (
+            <TimeSlotRow key={`${slot.start}-${slot.end}`} timeSlot={slot} />
           ))}
         </tbody>
       </table>

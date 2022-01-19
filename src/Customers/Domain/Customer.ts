@@ -1,6 +1,8 @@
-import { Motorcyclist } from 'src/Motorcyclists/Domain/Motorcyclists';
 import { CustomerId } from './CustomerId';
 import { CustomerName } from './CustomerName';
+import { Motorcyclist } from 'src/Motorcyclists/Domain/Motorcyclists';
+import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
+import { Booking } from 'src/Bookings/Domain/Booking';
 
 export class Customer {
   private readonly _customerId: CustomerId;
@@ -19,11 +21,24 @@ export class Customer {
     this._customerName = props.customerName;
   }
 
-  public TakeMotorcyclist(motorcyclist: Motorcyclist): void {
+  public Book({
+    motorcyclist,
+    timeSlot,
+  }: {
+    motorcyclist: Motorcyclist;
+    timeSlot: TimeSlot;
+  }): Booking {
+    timeSlot.book();
     motorcyclist.TakeMotorcyclist();
+
+    return Booking.new({
+      customer: this,
+      motorcyclist,
+      timeSlot,
+    });
   }
 
-  public TakeBackMotorcyclist(motorcyclist: Motorcyclist): void {
+  public cancelBooking(motorcyclist: Motorcyclist): void {
     motorcyclist.TakeBackMotorcyclist();
   }
 }

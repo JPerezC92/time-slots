@@ -36,7 +36,7 @@ export class TakeMotorcyclist<Presenter>
   async execute({ customer }: TakeMotorcyclistInputPort): Promise<Presenter> {
     const motorcyclist = await this._motorcyclistAvailableFinder.execute();
 
-    customer.TakeMotorcyclist(motorcyclist);
+    // customer.Book({ motorcyclist });
 
     return this._presenter.show({ motorcyclist });
   }

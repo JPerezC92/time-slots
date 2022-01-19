@@ -11,7 +11,6 @@ export class FirestoreCustomerRepository implements CustomerRepository {
   private readonly _path = `${DB_NAME}-customers`;
 
   async findById(id: CustomerId): Promise<Customer> {
-    id.value;
     const docRef = doc(DB, this._path, id.value);
     const customer = {
       id: (await getDoc(docRef)).id,

@@ -1,7 +1,6 @@
 import {
   collection,
   doc,
-  getDoc,
   getDocs,
   limit,
   query,
@@ -17,6 +16,8 @@ import { MotorcyclistPlain } from './mappers/MotorcyclistPlain';
 export class FirestoreMotorcyclistRepository implements MotorcyclistRepository {
   private readonly path = `${DB_NAME}-motorcyclists`;
 
+  // constructor() {}
+
   async findOneAvailable(): Promise<Motorcyclist> {
     const collRef = collection(DB, this.path);
     const queryResult = query(
@@ -24,7 +25,9 @@ export class FirestoreMotorcyclistRepository implements MotorcyclistRepository {
       where('isAvailable', '==', true),
       limit(1)
     );
+
     const doc = (await getDocs(queryResult)).docs[0];
+
     const motorcyclistPlain = {
       id: doc.id,
       ...doc.data(),
@@ -45,7 +48,7 @@ export class FirestoreMotorcyclistRepository implements MotorcyclistRepository {
   async update(motorcyclist: Motorcyclist): Promise<void> {
     const motorcyclistPlain = MotorcyclistMapper.toPlain(motorcyclist);
 
-    updateDoc(doc(collection(DB, this.path), motorcyclist.id), {
+    await updateDoc(doc(collection(DB, this.path), motorcyclist.id), {
       isAvailable: motorcyclistPlain.isAvailable,
     });
   }
