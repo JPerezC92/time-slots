@@ -11,7 +11,7 @@ import { DB, DB_NAME } from 'src/Shared/Infrastructure/DB/connection';
 import { MotorcyclistRepository } from '../Domain/MotorcyclistRepository';
 import { Motorcyclist } from '../Domain/Motorcyclists';
 import { MotorcyclistMapper } from './mappers/MotorcyclistMapper';
-import { MotorcyclistPlain } from './mappers/MotorcyclistPlain';
+import { MotorcyclistPersistence } from '../Domain/MotorcyclistPersistence';
 
 export class FirestoreMotorcyclistRepository implements MotorcyclistRepository {
   private readonly path = `${DB_NAME}-motorcyclists`;
@@ -31,7 +31,7 @@ export class FirestoreMotorcyclistRepository implements MotorcyclistRepository {
     const motorcyclistPlain = {
       id: doc.id,
       ...doc.data(),
-    } as MotorcyclistPlain;
+    } as MotorcyclistPersistence;
 
     return MotorcyclistMapper.toDomain(motorcyclistPlain);
   }
@@ -41,12 +41,12 @@ export class FirestoreMotorcyclistRepository implements MotorcyclistRepository {
     const motorcyclists = docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
-    })) as MotorcyclistPlain[];
+    })) as MotorcyclistPersistence[];
     return motorcyclists.map(MotorcyclistMapper.toDomain) || [];
   }
 
   async update(motorcyclist: Motorcyclist): Promise<void> {
-    const motorcyclistPlain = MotorcyclistMapper.toPlain(motorcyclist);
+    const motorcyclistPlain = MotorcyclistMapper.toPersistence(motorcyclist);
 
     await updateDoc(doc(collection(DB, this.path), motorcyclist.id), {
       isAvailable: motorcyclistPlain.isAvailable,

@@ -3,6 +3,8 @@ import {
   doc,
   getDoc,
   getDocs,
+  orderBy,
+  query,
   updateDoc,
 } from 'firebase/firestore';
 import { DB, DB_NAME } from 'src/Shared/Infrastructure/DB/connection';
@@ -15,7 +17,9 @@ export class FirestoreTimeSlotRepository implements TimeSlotRepository {
   private readonly _path = `${DB_NAME}-timeslots`;
 
   async findAll(): Promise<TimeSlot[]> {
-    const { docs } = await getDocs(collection(DB, this._path));
+    const { docs } = await getDocs(
+      query(collection(DB, this._path), orderBy('order'))
+    );
     const timeSlots = docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),

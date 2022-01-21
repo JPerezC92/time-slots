@@ -41,6 +41,6 @@ export class TimeSlotFinder
         timeSlot: timeSlotCollection,
       });
 
-    this._timeSlotStore.setTimeSlotColl(timeSlotsVerified);
+    this._timeSlotStore.setTimeSlotCollection(timeSlotsVerified);
   }
 }

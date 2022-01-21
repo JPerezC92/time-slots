@@ -10,7 +10,11 @@ import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
 import { useZustandMotorcyclistStore } from 'src/Motorcyclists/Infrastructure/useMotorcyclistStore';
 import { useZustandTimeSlotStore } from 'src/TimeSlot/Infrastructure/ZustandTimeSlotStore';
 
-export const useTimeSlotBooker = ({ timeSlot }: { timeSlot: TimeSlot }) => {
+export const useTimeSlotBookingCreator = ({
+  timeSlot,
+}: {
+  timeSlot: TimeSlot;
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const motorcyclistStore = useZustandMotorcyclistStore();
   const timeSlotStore = useZustandTimeSlotStore();

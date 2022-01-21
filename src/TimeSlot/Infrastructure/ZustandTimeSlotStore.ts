@@ -11,14 +11,17 @@ interface TimeSlotViewStore {
 const useTimeSlotMergedStore = create<TimeSlotViewStore & TimeSlotStore>(
   (set) => ({
     timeSlotCollection: [],
-    setTimeSlotColl: (timeSlotCollection: TimeSlot[]) =>
+    setTimeSlotCollection: (timeSlotCollection: TimeSlot[]) =>
       set({ timeSlotCollection }),
   })
 );
 
 export const useZustandTimeSlotStore: () => TimeSlotStore = () => {
   const timeSlotStore = useTimeSlotMergedStore<TimeSlotStore>(
-    useCallback((state) => ({ setTimeSlotColl: state.setTimeSlotColl }), []),
+    useCallback(
+      (state) => ({ setTimeSlotCollection: state.setTimeSlotCollection }),
+      []
+    ),
     shallow
   );
   return timeSlotStore;

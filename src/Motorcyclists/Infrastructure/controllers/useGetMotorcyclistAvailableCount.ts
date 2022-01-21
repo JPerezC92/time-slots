@@ -18,7 +18,6 @@ export const useGetMotorcyclistAvailableCount = () => {
         const motorcyclistRepository = new FirestoreMotorcyclistRepository();
         const motorcyclistAvailableCounter = new MotorcyclistAvailableCounter({
           motorcyclistRepository,
-          presenter: { show: (data) => data },
           motorcyclistStore,
         });
 

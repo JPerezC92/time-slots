@@ -1,4 +1,3 @@
-import { Booking } from 'src/Bookings/Domain/Booking';
 import { TimeSlotEnd } from './TimeSlotEnd';
 import { TimeSlotId } from './TimeSlotId';
 import { TimeSlotIsBooked } from './TimeSlotIsAvailable';
@@ -45,6 +44,10 @@ export class TimeSlot {
 
   public book(): void {
     this._isBooked = new TimeSlotIsBooked(true);
+  }
+
+  public CancelBooking(): void {
+    this._isBooked = new TimeSlotIsBooked(false);
   }
 
   public equals(other: TimeSlot): boolean {

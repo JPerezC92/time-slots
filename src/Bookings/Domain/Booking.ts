@@ -1,3 +1,4 @@
+import { BookingId } from './BookingId';
 import { Customer } from 'src/Customers/Domain/Customer';
 import { Motorcyclist } from 'src/Motorcyclists/Domain/Motorcyclists';
 import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
@@ -32,8 +33,4 @@ export class Booking {
       ...props,
     });
   }
-}
-
-export class BookingId {
-  constructor(public readonly value: string) {}
 }

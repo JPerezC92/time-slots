@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react';
 
 import { MotorcyclistAvailableCounter } from 'src/Motorcyclists/Infrastructure/components/MotorcyclistAvailableCounter';
-import { TimeSlotRow } from 'pages/TimeSlotRow';
+import { TimeSlotRow } from 'src/TimeSlot/Infrastructure/components/TimeSlotRow';
 import { useFindTimeSlots } from 'src/TimeSlot/Infrastructure/controllers/useFindTimeSlots';
 import { useTimeSlotViewStore } from 'src/TimeSlot/Infrastructure/ZustandTimeSlotStore';
 

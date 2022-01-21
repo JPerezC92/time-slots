@@ -1,8 +1,8 @@
+import { Booking } from 'src/Bookings/Domain/Booking';
 import { CustomerId } from './CustomerId';
 import { CustomerName } from './CustomerName';
 import { Motorcyclist } from 'src/Motorcyclists/Domain/Motorcyclists';
 import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
-import { Booking } from 'src/Bookings/Domain/Booking';
 
 export class Customer {
   private readonly _customerId: CustomerId;
@@ -38,7 +38,14 @@ export class Customer {
     });
   }
 
-  public cancelBooking(motorcyclist: Motorcyclist): void {
+  public CancelBooking({
+    motorcyclist,
+    timeSlot,
+  }: {
+    motorcyclist: Motorcyclist;
+    timeSlot: TimeSlot;
+  }): void {
     motorcyclist.TakeBackMotorcyclist();
+    timeSlot.CancelBooking();
   }
 }

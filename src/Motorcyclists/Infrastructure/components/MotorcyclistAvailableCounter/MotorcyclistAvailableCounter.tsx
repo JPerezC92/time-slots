@@ -1,4 +1,5 @@
 import { FC, useEffect } from 'react';
+
 import { useGetMotorcyclistAvailableCount } from '../../controllers/useGetMotorcyclistAvailableCount';
 import { useMotorcyclistViewStore } from '../../useMotorcyclistStore';
 
@@ -15,7 +16,6 @@ export const MotorcyclistAvailableCounter: FC = () => {
       <h1>
         motorcyclistAvailableCount {!isLoading && motorcyclistViewState.count}{' '}
       </h1>
-      <button onClick={() => run()}> c</button>
     </div>
   );
 };
