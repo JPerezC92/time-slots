@@ -7,7 +7,7 @@ import {
   query,
   updateDoc,
 } from 'firebase/firestore';
-import { DB, DB_NAME } from 'src/Shared/Infrastructure/DB/connection';
+import { DB, DB_NAME } from 'src/Shared/Infrastructure/firebase';
 import { TimeSlot } from '../Domain/TimeSlot';
 import { TimeSlotRepository } from '../Domain/TimeSlotRepository';
 import { TimeSlotMapper } from './mappers/TimeSlotMapper';

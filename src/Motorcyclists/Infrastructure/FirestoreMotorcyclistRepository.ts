@@ -7,7 +7,7 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { DB, DB_NAME } from 'src/Shared/Infrastructure/DB/connection';
+import { DB, DB_NAME } from 'src/Shared/Infrastructure/firebase';
 import { MotorcyclistRepository } from '../Domain/MotorcyclistRepository';
 import { Motorcyclist } from '../Domain/Motorcyclists';
 import { MotorcyclistMapper } from './mappers/MotorcyclistMapper';

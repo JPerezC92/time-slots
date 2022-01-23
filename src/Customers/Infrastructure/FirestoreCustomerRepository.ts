@@ -1,9 +1,8 @@
 import { doc, getDoc } from 'firebase/firestore';
 
 import { Customer } from '../Domain/Customer';
-import { CustomerId } from '../Domain/CustomerId';
 import { CustomerRepository } from '../Domain/CustomerRepository';
-import { DB, DB_NAME } from 'src/Shared/Infrastructure/DB/connection';
+import { DB, DB_NAME } from 'src/Shared/Infrastructure/firebase';
 import { CustomerPersistence } from './CustomerPersistence';
 import { CustomerMapper } from './mappers/CustomerMapper';
 

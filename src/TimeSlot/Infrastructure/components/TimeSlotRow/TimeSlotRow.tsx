@@ -8,6 +8,7 @@ import { useTimeSlotBookingCreator } from 'src/Bookings/Infrastructure/controlle
 import { useTimeSlotBookerCanceller } from 'src/Bookings/Infrastructure/controllers/useTimeSlotBookerCanceller';
 
 import styles from './TimeSlotRow.module.scss';
+import { useAuthViewStore } from 'src/Auth/Infrastructure/ZustandAuthStore';
 
 const getColor = (timeSlot: TimeSlot): string | undefined => {
   if (timeSlot.wasBookedForTheCurrentUser)
@@ -17,13 +18,11 @@ const getColor = (timeSlot: TimeSlot): string | undefined => {
 };
 
 export const TimeSlotRow: FC<{ timeSlot: TimeSlot }> = ({ timeSlot }) => {
-  const timeSlotBooker = useTimeSlotBookingCreator({ timeSlot });
+  const { customer } = useAuthViewStore();
+  const timeSlotBooker = useTimeSlotBookingCreator({ timeSlot, customer });
   const timeSlotBookerCanceller = useTimeSlotBookerCanceller({
     timeSlot,
-    customer: new Customer({
-      customerId: new CustomerId('heEjzI8X1OhuoKHonAMe'),
-      customerName: new CustomerName('Philip'),
-    }),
+    customer,
   });
   const color = useMemo(() => getColor(timeSlot), [timeSlot]);
 
@@ -39,13 +38,31 @@ export const TimeSlotRow: FC<{ timeSlot: TimeSlot }> = ({ timeSlot }) => {
     <>
       <tr
         className={`${styles.TimeSlotsRow} ${color && color}`}
-        onClick={onClick}
+        // onClick={onClick}
       >
         <td>
           {`${timeSlot.start} - ${timeSlot.end}`}{' '}
           {(timeSlotBooker.isLoading || timeSlotBookerCanceller.isLoading) &&
             'Cargando'}
         </td>
+
+        {customer.isLoggedIn && (
+          <>
+            <td>
+              {!timeSlot.isBooked && (
+                <button type="button" onClick={timeSlotBooker.run}>
+                  Book
+                </button>
+              )}
+
+              {timeSlot.isBooked && timeSlot.wasBookedForTheCurrentUser && (
+                <button type="button" onClick={timeSlotBookerCanceller.run}>
+                  Cancel booking
+                </button>
+              )}
+            </td>
+          </>
+        )}
       </tr>
     </>
   );

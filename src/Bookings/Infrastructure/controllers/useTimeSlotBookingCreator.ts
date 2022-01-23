@@ -9,11 +9,14 @@ import { FirestoreTimeSlotRepository } from 'src/TimeSlot/Infrastructure/Firesto
 import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
 import { useZustandMotorcyclistStore } from 'src/Motorcyclists/Infrastructure/useMotorcyclistStore';
 import { useZustandTimeSlotStore } from 'src/TimeSlot/Infrastructure/ZustandTimeSlotStore';
+import { Customer } from 'src/Customers/Domain/Customer';
 
 export const useTimeSlotBookingCreator = ({
+  customer,
   timeSlot,
 }: {
   timeSlot: TimeSlot;
+  customer: Customer;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const motorcyclistStore = useZustandMotorcyclistStore();
@@ -23,7 +26,7 @@ export const useTimeSlotBookingCreator = ({
 
   useEffect(() => {
     (async () => {
-      if (isLoading && !timeSlot.isBooked) {
+      if (isLoading && !timeSlot.isBooked && customer.isLoggedIn) {
         const bookingCreator = new BookingCreator({
           motorcyclistRepository: new FirestoreMotorcyclistRepository(),
           customerRepository: new FirestoreCustomerRepository(),
@@ -34,13 +37,13 @@ export const useTimeSlotBookingCreator = ({
         });
 
         await bookingCreator.execute({
-          customerId: new CustomerId('heEjzI8X1OhuoKHonAMe'),
+          customer,
           timeSlot,
         });
       }
       setIsLoading(false);
     })();
-  }, [isLoading, motorcyclistStore, timeSlot, timeSlotStore]);
+  }, [customer, isLoading, motorcyclistStore, timeSlot, timeSlotStore]);
 
   return {
     run,

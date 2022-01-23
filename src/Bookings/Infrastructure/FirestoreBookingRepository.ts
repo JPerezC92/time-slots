@@ -13,7 +13,7 @@ import { BookingMapper } from './mappers/BookingMapper';
 import { BookingPersistence } from '../Domain/BookingPersistence';
 import { BookingRepository } from '../Domain/BookingRepository';
 import { Customer } from 'src/Customers/Domain/Customer';
-import { DB, DB_NAME } from 'src/Shared/Infrastructure/DB/connection';
+import { DB, DB_NAME } from 'src/Shared/Infrastructure/firebase';
 import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
 
 export class FirestoreBookingRepository implements BookingRepository {

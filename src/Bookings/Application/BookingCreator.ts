@@ -1,5 +1,5 @@
 import { BookingRepository } from '../Domain/BookingRepository';
-import { CustomerId } from 'src/Customers/Domain/CustomerId';
+import { Customer } from 'src/Customers/Domain/Customer';
 import { CustomerRepository } from 'src/Customers/Domain/CustomerRepository';
 import { MotorcyclistAvailableCounter } from 'src/Motorcyclists/Application/MotorcyclistAvailableCounter';
 import { MotorcyclistRepository } from 'src/Motorcyclists/Domain/MotorcyclistRepository';
@@ -11,7 +11,7 @@ import { TimeSlotStore } from 'src/TimeSlot/Domain/TimeSlotStore';
 import { TimeSlotFinder } from 'src/TimeSlot/Application/TimeSlotFinder';
 
 interface BookingCreatorInput {
-  customerId: CustomerId;
+  customer: Customer;
   timeSlot: TimeSlot;
 }
 
@@ -55,16 +55,13 @@ export class BookingCreator
     });
   }
 
-  async execute({ customerId, timeSlot }: BookingCreatorInput): Promise<void> {
-    const [customerFound, timeSlotFound, motorcyclistFound] = await Promise.all(
-      [
-        this._customerRepository.findById(customerId.value),
-        this._timeSlotRepository.findById(timeSlot),
-        this._motorcyclistRepository.findOneAvailable(),
-      ]
-    );
+  async execute({ customer, timeSlot }: BookingCreatorInput): Promise<void> {
+    const [timeSlotFound, motorcyclistFound] = await Promise.all([
+      this._timeSlotRepository.findById(timeSlot),
+      this._motorcyclistRepository.findOneAvailable(),
+    ]);
 
-    const booking = customerFound.Book({
+    const booking = customer.Book({
       motorcyclist: motorcyclistFound,
       timeSlot: timeSlotFound,
     });
@@ -76,7 +73,7 @@ export class BookingCreator
     ]);
 
     await Promise.all([
-      this._timeSlotFinder.execute({ customer: customerFound }),
+      this._timeSlotFinder.execute({ customer }),
       this._motorcyclistAvailableCounter.execute(),
     ]);
   }

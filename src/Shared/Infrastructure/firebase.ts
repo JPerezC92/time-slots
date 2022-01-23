@@ -1,5 +1,6 @@
-import { FirebaseOptions, initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { FirebaseOptions, initializeApp } from 'firebase/app';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig: FirebaseOptions = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -13,4 +14,6 @@ const firebaseConfig: FirebaseOptions = {
 const app = initializeApp(firebaseConfig);
 
 export const DB = getFirestore(app);
-export const DB_NAME = "time-slots";
+export const googleAuth = getAuth();
+export const googleAuthProvider = new GoogleAuthProvider();
+export const DB_NAME = 'time-slots';
