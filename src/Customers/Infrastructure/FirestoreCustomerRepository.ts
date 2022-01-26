@@ -1,10 +1,10 @@
 import { doc, getDoc } from 'firebase/firestore';
 
 import { Customer } from '../Domain/Customer';
+import { CustomerMapper } from './mappers/CustomerMapper';
+import { CustomerPersistence } from '../Domain/CustomerPersistence';
 import { CustomerRepository } from '../Domain/CustomerRepository';
 import { DB, DB_NAME } from 'src/Shared/Infrastructure/firebase';
-import { CustomerPersistence } from './CustomerPersistence';
-import { CustomerMapper } from './mappers/CustomerMapper';
 
 export class FirestoreCustomerRepository implements CustomerRepository {
   private readonly _path = `${DB_NAME}-customers`;

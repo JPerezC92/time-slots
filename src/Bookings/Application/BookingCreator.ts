@@ -9,6 +9,7 @@ import { TimeSlotRepository } from 'src/TimeSlot/Domain/TimeSlotRepository';
 import { UseCase } from 'src/Shared/Domain/UseCase';
 import { TimeSlotStore } from 'src/TimeSlot/Domain/TimeSlotStore';
 import { TimeSlotFinder } from 'src/TimeSlot/Application/TimeSlotFinder';
+import { MotorcyclistAvailableFinder } from 'src/Motorcyclists/Application/MotorcyclistAvailableFinder';
 
 interface BookingCreatorInput {
   customer: Customer;
@@ -27,6 +28,7 @@ export class BookingCreator
 
   private readonly _timeSlotFinder: TimeSlotFinder;
   private readonly _motorcyclistAvailableCounter: MotorcyclistAvailableCounter;
+  private readonly _motorcyclistAvailableFinder: MotorcyclistAvailableFinder;
 
   constructor(props: {
     bookingRepository: BookingRepository;
@@ -49,17 +51,26 @@ export class BookingCreator
       bookingRepository: this._bookingRepository,
     });
 
+    this._motorcyclistAvailableFinder = new MotorcyclistAvailableFinder({
+      motorcyclistRepository: this._motorcyclistRepository,
+    });
+
     this._motorcyclistAvailableCounter = new MotorcyclistAvailableCounter({
       motorcyclistRepository: this._motorcyclistRepository,
       motorcyclistStore: this._motorcyclistStore,
     });
   }
 
-  async execute({ customer, timeSlot }: BookingCreatorInput): Promise<void> {
+  public async execute({
+    customer,
+    timeSlot,
+  }: BookingCreatorInput): Promise<void> {
     const [timeSlotFound, motorcyclistFound] = await Promise.all([
       this._timeSlotRepository.findById(timeSlot),
-      this._motorcyclistRepository.findOneAvailable(),
+      this._motorcyclistAvailableFinder.execute(),
     ]);
+
+    if (timeSlotFound.isBooked) throw new Error('Already taken');
 
     const booking = customer.Book({
       motorcyclist: motorcyclistFound,

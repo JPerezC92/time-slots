@@ -1,7 +1,7 @@
+import { signInWithPopup, signOut } from 'firebase/auth';
 import { useCallback } from 'react';
 import create from 'zustand';
 import shallow from 'zustand/shallow';
-import { signInWithPopup, signOut } from 'firebase/auth';
 
 import { AuthStore } from '../Domain/AuthStore';
 import { Customer } from 'src/Customers/Domain/Customer';
@@ -17,9 +17,9 @@ interface AuthViewStore {
   customer: Customer;
 }
 const guest = new Customer({
-  customerId: new CustomerId(''),
-  customerName: new CustomerName('Guest'),
-  isLoggedIn: new IsLoggedIn(false),
+  customerId: new CustomerId('heEjzI8X1OhuoKHonAMe'),
+  customerName: new CustomerName('Philip'),
+  isLoggedIn: new IsLoggedIn(true),
 });
 
 export const useAuthMergedStore = create<AuthStore & AuthViewStore>((set) => ({

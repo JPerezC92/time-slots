@@ -6,6 +6,7 @@ import { UseCase } from 'src/Shared/Domain/UseCase';
 export class MotorcyclistAvailableCounter implements UseCase<Promise<void>> {
   private readonly _motorcyclistRepository: MotorcyclistRepository;
   private readonly _motorcyclistStore: MotorcyclistStore;
+  private readonly _motorcyclistCounter: MotorcyclistCounter;
 
   constructor(props: {
     motorcyclistStore: MotorcyclistStore;
@@ -13,16 +14,15 @@ export class MotorcyclistAvailableCounter implements UseCase<Promise<void>> {
   }) {
     this._motorcyclistStore = props.motorcyclistStore;
     this._motorcyclistRepository = props.motorcyclistRepository;
+    this._motorcyclistCounter = new MotorcyclistCounter();
   }
 
   async execute(): Promise<void> {
     const motorcyclistCollection = await this._motorcyclistRepository.findAll();
 
-    const motorcyclistCounter = new MotorcyclistCounter({
-      motorcyclistCollection,
-    });
-
-    const count = motorcyclistCounter.availableCount();
+    const count = this._motorcyclistCounter.availableCount(
+      motorcyclistCollection
+    );
 
     this._motorcyclistStore.updateCount(count);
   }

@@ -1,6 +1,7 @@
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   limit,
   query,
@@ -14,12 +15,21 @@ import { MotorcyclistMapper } from './mappers/MotorcyclistMapper';
 import { MotorcyclistPersistence } from '../Domain/MotorcyclistPersistence';
 
 export class FirestoreMotorcyclistRepository implements MotorcyclistRepository {
-  private readonly path = `${DB_NAME}-motorcyclists`;
+  private readonly _path = `${DB_NAME}-motorcyclists`;
 
-  // constructor() {}
+  async findById(motorcyclistId: string): Promise<Motorcyclist> {
+    const docRef = doc(DB, this._path, motorcyclistId);
+
+    const timeSlotPersistence = {
+      id: (await getDoc(docRef)).id,
+      ...(await getDoc(docRef)).data(),
+    } as MotorcyclistPersistence;
+
+    return MotorcyclistMapper.toDomain(timeSlotPersistence);
+  }
 
   async findOneAvailable(): Promise<Motorcyclist> {
-    const collRef = collection(DB, this.path);
+    const collRef = collection(DB, this._path);
     const queryResult = query(
       collRef,
       where('isAvailable', '==', true),
@@ -37,10 +47,11 @@ export class FirestoreMotorcyclistRepository implements MotorcyclistRepository {
   }
 
   async findAll(): Promise<Motorcyclist[]> {
-    const { docs } = await getDocs(collection(DB, this.path));
+    const { docs } = await getDocs(collection(DB, this._path));
     const motorcyclists = docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
+      timeSlotAssigned: doc.data().timeSlotAssigned || [],
     })) as MotorcyclistPersistence[];
     return motorcyclists.map(MotorcyclistMapper.toDomain) || [];
   }
@@ -48,8 +59,8 @@ export class FirestoreMotorcyclistRepository implements MotorcyclistRepository {
   async update(motorcyclist: Motorcyclist): Promise<void> {
     const motorcyclistPlain = MotorcyclistMapper.toPersistence(motorcyclist);
 
-    await updateDoc(doc(collection(DB, this.path), motorcyclist.id), {
-      isAvailable: motorcyclistPlain.isAvailable,
+    await updateDoc(doc(collection(DB, this._path), motorcyclist.id), {
+      timeSlotAssigned: motorcyclistPlain.timeSlotAssigned,
     });
   }
 }

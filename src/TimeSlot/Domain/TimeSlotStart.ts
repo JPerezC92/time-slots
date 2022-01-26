@@ -1,3 +1,3 @@
-import { StringValueObject } from 'src/Shared/Domain/StringValueObject';
+import { DateValueObject } from 'src/Shared/Domain/DateValueObject';
 
-export class TimeSlotStart extends StringValueObject {}
+export class TimeSlotStart extends DateValueObject {}

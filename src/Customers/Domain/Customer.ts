@@ -1,9 +1,11 @@
 import { Booking } from 'src/Bookings/Domain/Booking';
 import { CustomerId } from './CustomerId';
 import { CustomerName } from './CustomerName';
-import { Motorcyclist } from 'src/Motorcyclists/Domain/Motorcyclists';
-import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
 import { IsLoggedIn } from './IsLoggedIn';
+import { Motorcyclist } from 'src/Motorcyclists/Domain/Motorcyclists';
+import { MotorcyclistId } from 'src/Motorcyclists/Domain/MotorcyclistId';
+import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
+import { TimeSlotId } from 'src/TimeSlot/Domain/TimeSlotId';
 
 export class Customer {
   private readonly _customerId: CustomerId;
@@ -39,23 +41,23 @@ export class Customer {
     timeSlot: TimeSlot;
   }): Booking {
     timeSlot.book();
-    motorcyclist.TakeMotorcyclist();
+    motorcyclist.assignTimeSlot(timeSlot);
 
     return Booking.new({
-      customer: this,
-      motorcyclist,
-      timeSlot,
+      customerId: new CustomerId(this.id),
+      motorcyclistId: new MotorcyclistId(motorcyclist.id),
+      timeSlotId: new TimeSlotId(timeSlot.id),
     });
   }
 
   public CancelBooking({
     motorcyclist,
-    timeSlot,
+    timeSlot: timeslot,
   }: {
     motorcyclist: Motorcyclist;
     timeSlot: TimeSlot;
   }): void {
-    motorcyclist.TakeBackMotorcyclist();
-    timeSlot.CancelBooking();
+    motorcyclist.unassignTimeSlot(timeslot);
+    timeslot.CancelBooking();
   }
 }

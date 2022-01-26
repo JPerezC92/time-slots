@@ -45,20 +45,17 @@ export class FirestoreBookingRepository implements BookingRepository {
     const bookings = docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
-    })) as BookingPersistence[];
+    }))[0] as BookingPersistence;
 
-    return bookings.map(BookingMapper.toDomain)[0];
+    return BookingMapper.toDomain(bookings);
   }
 
   async save(booking: Booking): Promise<void> {
     const bookingPersistence = BookingMapper.toPersistence(booking);
     await addDoc(collection(DB, this._path), {
-      customerId: bookingPersistence.customer.id,
-      motorcyclistId: bookingPersistence.motorcyclist.id,
-      timeSlotId: bookingPersistence.timeSlot.id,
-      customer: bookingPersistence.customer,
-      timeSlot: bookingPersistence.timeSlot,
-      motorcyclist: bookingPersistence.motorcyclist,
+      customerId: bookingPersistence.customerId,
+      motorcyclistId: bookingPersistence.motorcyclistId,
+      timeSlotId: bookingPersistence.timeSlotId,
     });
   }
 
@@ -66,14 +63,14 @@ export class FirestoreBookingRepository implements BookingRepository {
     customer,
     timeSlot,
   }: {
-    customer: Customer;
-    timeSlot: TimeSlot;
+    customer: string;
+    timeSlot: string;
   }): Promise<void> {
     const collRef = collection(DB, this._path);
     const queryResult = query(
       collRef,
-      where('customerId', '==', customer.id),
-      where('timeSlotId', '==', timeSlot.id),
+      where('customerId', '==', customer),
+      where('timeSlotId', '==', timeSlot),
       limit(1)
     );
 

@@ -9,7 +9,7 @@ import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
 import { useZustandMotorcyclistStore } from 'src/Motorcyclists/Infrastructure/useMotorcyclistStore';
 import { useZustandTimeSlotStore } from 'src/TimeSlot/Infrastructure/ZustandTimeSlotStore';
 
-export const useTimeSlotBookerCanceller = ({
+export const useBookingCanceller = ({
   customer,
   timeSlot,
 }: {
@@ -24,7 +24,7 @@ export const useTimeSlotBookerCanceller = ({
 
   useEffect(() => {
     (async () => {
-      if (isLoading && timeSlot.wasBookedForTheCurrentUser) {
+      if (isLoading && timeSlot.isBookedByCustomer) {
         const bookingCanceller = new BookingCanceller({
           bookingRepository: new FirestoreBookingRepository(),
           motorcyclistRepository: new FirestoreMotorcyclistRepository(),

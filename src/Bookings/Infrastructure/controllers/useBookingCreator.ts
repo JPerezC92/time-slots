@@ -11,7 +11,7 @@ import { useZustandMotorcyclistStore } from 'src/Motorcyclists/Infrastructure/us
 import { useZustandTimeSlotStore } from 'src/TimeSlot/Infrastructure/ZustandTimeSlotStore';
 import { Customer } from 'src/Customers/Domain/Customer';
 
-export const useTimeSlotBookingCreator = ({
+export const useBookingCreator = ({
   customer,
   timeSlot,
 }: {

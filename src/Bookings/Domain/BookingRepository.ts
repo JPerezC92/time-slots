@@ -10,7 +10,7 @@ export interface BookingRepository {
   }): Promise<Booking>;
   save(booking: Booking): Promise<void>;
   deleteByCustomerAndTimeSlot(props: {
-    customer: Customer;
-    timeSlot: TimeSlot;
+    customer: Customer['id'];
+    timeSlot: TimeSlot['id'];
   }): Promise<void>;
 }

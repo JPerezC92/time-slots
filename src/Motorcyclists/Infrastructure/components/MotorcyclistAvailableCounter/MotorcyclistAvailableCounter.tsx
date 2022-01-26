@@ -1,11 +1,11 @@
 import { FC, useEffect } from 'react';
 
-import { useGetMotorcyclistAvailableCount } from '../../controllers/useGetMotorcyclistAvailableCount';
+import { useMotorcyclistAvailableCounter } from '../../controllers/useMotorcyclistAvailableCounter';
 import { useMotorcyclistViewStore } from '../../useMotorcyclistStore';
 
 export const MotorcyclistAvailableCounter: FC = () => {
   const motorcyclistViewState = useMotorcyclistViewStore();
-  const { isLoading, run } = useGetMotorcyclistAvailableCount();
+  const { isLoading, run } = useMotorcyclistAvailableCounter();
 
   useEffect(() => {
     run();

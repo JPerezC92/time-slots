@@ -36,13 +36,13 @@ export class BookingCanceller
     this._timeSlotRepository = props.timeSlotRepository;
 
     this._timeSlotFinder = new TimeSlotFinder({
-      timeSlotRepository: this._timeSlotRepository,
-      bookingRepository: this._bookingRepository,
+      timeSlotRepository: props.timeSlotRepository,
+      bookingRepository: props.bookingRepository,
       timeSlotStore: props.timeSlotStore,
     });
 
     this._motorcyclistAvailableCounter = new MotorcyclistAvailableCounter({
-      motorcyclistRepository: this._motorcyclistRepository,
+      motorcyclistRepository: props.motorcyclistRepository,
       motorcyclistStore: props.motorcyclistStore,
     });
   }
@@ -56,26 +56,27 @@ export class BookingCanceller
         customer,
         timeSlot,
       });
+    const motorcyclist = await this._motorcyclistRepository.findById(
+      bookingFound.motorcyclistId.value
+    );
 
-    bookingFound.customer.CancelBooking({
-      motorcyclist: bookingFound.motorcyclist,
-      timeSlot: bookingFound.timeSlot,
+    customer.CancelBooking({
+      motorcyclist: motorcyclist,
+      timeSlot: timeSlot,
     });
 
     await Promise.all([
-      this._motorcyclistRepository.update(bookingFound.motorcyclist),
-      this._timeSlotRepository.update(bookingFound.timeSlot),
+      this._motorcyclistRepository.update(motorcyclist),
+      this._timeSlotRepository.update(timeSlot),
       this._bookingRepository.deleteByCustomerAndTimeSlot({
-        customer: bookingFound.customer,
-        timeSlot: bookingFound.timeSlot,
+        customer: bookingFound.customerId.value,
+        timeSlot: bookingFound.timeSlotId.value,
       }),
     ]);
 
     await Promise.all([
       this._motorcyclistAvailableCounter.execute(),
-      this._timeSlotFinder.execute({
-        customer: bookingFound.customer,
-      }),
+      this._timeSlotFinder.execute({ customer }),
     ]);
   }
 }

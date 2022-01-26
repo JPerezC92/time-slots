@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { Customer } from 'src/Customers/Domain/Customer';
+import { FirestoreBookingRepository } from 'src/Bookings/Infrastructure/FirestoreBookingRepository';
 import { FirestoreTimeSlotRepository } from '../FirestoreTimeSlotRepository';
 import { TimeSlotFinder } from 'src/TimeSlot/Application/TimeSlotFinder';
 import { useZustandTimeSlotStore } from '../ZustandTimeSlotStore';
-import { FirestoreBookingRepository } from 'src/Bookings/Infrastructure/FirestoreBookingRepository';
-import { Customer } from 'src/Customers/Domain/Customer';
-import { CustomerId } from 'src/Customers/Domain/CustomerId';
-import { CustomerName } from 'src/Customers/Domain/CustomerName';
 
-export const useFindTimeSlots = () => {
+export const useTimeSlotsFinder = ({ customer }: { customer: Customer }) => {
   const timeSlotStore = useZustandTimeSlotStore();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -23,17 +21,12 @@ export const useFindTimeSlots = () => {
           timeSlotStore,
         });
 
-        await timeSlotFinder.execute({
-          customer: new Customer({
-            customerId: new CustomerId('heEjzI8X1OhuoKHonAMe'),
-            customerName: new CustomerName('Philip'),
-          }),
-        });
+        await timeSlotFinder.execute({ customer });
 
         setIsLoading(() => false);
       }
     })();
-  }, [isLoading, timeSlotStore]);
+  }, [customer, isLoading, timeSlotStore]);
 
   return {
     isLoading,

@@ -1,28 +1,31 @@
 import { Booking } from 'src/Bookings/Domain/Booking';
 import { BookingId } from 'src/Bookings/Domain/BookingId';
 import { BookingPersistence } from '../../Domain/BookingPersistence';
-import { CustomerMapper } from 'src/Customers/Infrastructure/mappers/CustomerMapper';
-import { MotorcyclistMapper } from 'src/Motorcyclists/Infrastructure/mappers/MotorcyclistMapper';
-import { TimeSlotMapper } from 'src/TimeSlot/Infrastructure/mappers/TimeSlotMapper';
+import { CustomerId } from 'src/Customers/Domain/CustomerId';
+import { MotorcyclistId } from 'src/Motorcyclists/Domain/MotorcyclistId';
+import { TimeSlotId } from 'src/TimeSlot/Domain/TimeSlotId';
 
 export const BookingMapper = {
   toPersistence: (booking: Booking): BookingPersistence => {
     return {
       id: booking.id,
-      timeSlot: TimeSlotMapper.toPersistence(booking.timeSlot),
-      motorcyclist: MotorcyclistMapper.toPersistence(booking.motorcyclist),
-      customer: CustomerMapper.toPlain(booking.customer),
+      timeSlotId: booking.timeSlotId.value,
+      motorcyclistId: booking.motorcyclistId.value,
+      customerId: booking.customerId.value,
     };
   },
 
-  toDomain: (bookingPersistence: BookingPersistence): Booking => {
+  toDomain: ({
+    id,
+    motorcyclistId,
+    customerId,
+    timeSlotId,
+  }: BookingPersistence): Booking => {
     return new Booking({
-      bookingId: new BookingId(bookingPersistence.id),
-      timeSlot: TimeSlotMapper.toDomain(bookingPersistence.timeSlot),
-      motorcyclist: MotorcyclistMapper.toDomain(
-        bookingPersistence.motorcyclist
-      ),
-      customer: CustomerMapper.toDomain(bookingPersistence.customer),
+      bookingId: new BookingId(id),
+      timeSlotId: new TimeSlotId(timeSlotId),
+      motorcyclistId: new MotorcyclistId(motorcyclistId),
+      customerId: new CustomerId(customerId),
     });
   },
 };

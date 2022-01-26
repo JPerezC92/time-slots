@@ -1,7 +1,7 @@
 import { BookingRepository } from 'src/Bookings/Domain/BookingRepository';
-import { CheckTimeSlotWasBookedForTheCurrentCustomer } from './VerifyTimeSlotWasBookedForTheCurrentUserService';
 import { Customer } from 'src/Customers/Domain/Customer';
 import { TimeSlotRepository } from '../Domain/TimeSlotRepository';
+import { TimeSlotService } from '../Domain/TimeSlotService';
 import { TimeSlotStore } from '../Domain/TimeSlotStore';
 import { UseCase } from 'src/Shared/Domain/UseCase';
 
@@ -15,7 +15,6 @@ export class TimeSlotFinder
   private readonly _timeSlotRepository: TimeSlotRepository;
   private readonly _bookingRepository: BookingRepository;
   private readonly _timeSlotStore: TimeSlotStore;
-  private readonly _verifyTimeSlotWasBookedForTheCurrentUserService: CheckTimeSlotWasBookedForTheCurrentCustomer;
 
   constructor(props: {
     timeSlotRepository: TimeSlotRepository;
@@ -25,20 +24,19 @@ export class TimeSlotFinder
     this._timeSlotRepository = props.timeSlotRepository;
     this._bookingRepository = props.bookingRepository;
     this._timeSlotStore = props.timeSlotStore;
-    this._verifyTimeSlotWasBookedForTheCurrentUserService =
-      new CheckTimeSlotWasBookedForTheCurrentCustomer();
   }
 
   async execute({ customer }: TimeSlotFinderInput): Promise<void> {
-    const [timeSlotCollection, bookingList] = await Promise.all([
+    const timeSlotService = new TimeSlotService();
+    const [timeSlotCollection, bookingCollection] = await Promise.all([
       this._timeSlotRepository.findAll(),
       this._bookingRepository.findAllByCustomer(customer),
     ]);
 
     const timeSlotsVerified =
-      this._verifyTimeSlotWasBookedForTheCurrentUserService.execute({
-        bookingColl: bookingList,
-        timeSlot: timeSlotCollection,
+      timeSlotService.verifyWhichTimeSlotIsBookedByCustomer({
+        bookingCollection,
+        timeSlotCollection,
       });
 
     this._timeSlotStore.setTimeSlotCollection(timeSlotsVerified);

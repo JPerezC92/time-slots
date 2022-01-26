@@ -7,10 +7,14 @@ import {
   useAuthViewStore,
   useZustandAuthStore,
 } from 'src/Auth/Infrastructure/ZustandAuthStore';
-import { useFindTimeSlots } from 'src/TimeSlot/Infrastructure/controllers/useFindTimeSlots';
+import { useTimeSlotsFinder } from 'src/TimeSlot/Infrastructure/controllers/useTimeSlotsFinder';
 import { useTimeSlotViewStore } from 'src/TimeSlot/Infrastructure/ZustandTimeSlotStore';
 
 import styles from './TimeSlotScreen.module.scss';
+import { format, parse } from 'date-fns';
+import { timeSlotColl } from './timeslotsColl';
+import { addDoc, collection, doc } from 'firebase/firestore';
+import { DB } from 'src/Shared/Infrastructure/firebase';
 
 const googleAuth = getAuth();
 // const googleAuthProvider = new GoogleAuthProvider();
@@ -39,7 +43,7 @@ export const TimeSlotScreen: FC = () => {
   const { customer } = useAuthViewStore();
   const { login, logout, updateCredentials } = useZustandAuthStore();
   const { timeSlotCollection } = useTimeSlotViewStore();
-  const findTimeSlots = useFindTimeSlots();
+  const findTimeSlots = useTimeSlotsFinder({ customer });
 
   useEffect(() => {
     onAuthStateChanged(googleAuth, (user) => {
@@ -52,6 +56,15 @@ export const TimeSlotScreen: FC = () => {
   useEffect(() => {
     findTimeSlots.run();
   }, [findTimeSlots]);
+
+  useEffect(() => {
+    // timeSlotColl.map((timeSlot, i) => {
+    //   addDoc(collection(DB, 'time-slots-timeslots'), { ...timeSlot, order: i });
+    // });
+    // const date = parse('8:00', 'HH:mm', new Date());
+    // console.log(date);
+    // console.log(format(date, 'p'));
+  }, []);
 
   return (
     <div>

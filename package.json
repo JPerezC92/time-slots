@@ -2,27 +2,27 @@
   "name": "time-slots-frontend",
   "private": true,
   "scripts": {
+    "tsc":"tsc",
     "debugger": "cross-env NODE_OPTIONS='--inspect' next dev",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint && npm run tsc --noemit"
   },
   "dependencies": {
+    "date-fns": "2.28.0",
     "firebase": "^9.6.3",
     "next": "12.0.8",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "reset-css": "5.0.1",
     "sass": "1.48.0",
-    "zustand": "^3.6.9"
+    "zustand": "3.6.9"
   },
   "devDependencies": {
     "@types/node": "17.0.8",
     "@types/react": "17.0.38",
-    "@typescript-eslint/eslint-plugin": "5.9.1",
-    "@typescript-eslint/parser": "5.9.1",
-    "cross-env": "^7.0.3",
+    "cross-env": "7.0.3",
     "eslint": "8.6.0",
     "eslint-config-next": "12.0.8",
     "eslint-config-prettier": "8.3.0",

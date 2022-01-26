@@ -1,20 +1,20 @@
 import { BookingId } from './BookingId';
-import { Customer } from 'src/Customers/Domain/Customer';
-import { Motorcyclist } from 'src/Motorcyclists/Domain/Motorcyclists';
-import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
+import { CustomerId } from 'src/Customers/Domain/CustomerId';
+import { MotorcyclistId } from 'src/Motorcyclists/Domain/MotorcyclistId';
+import { TimeSlotId } from 'src/TimeSlot/Domain/TimeSlotId';
 
 interface BookingProps {
   bookingId: BookingId;
-  timeSlot: TimeSlot;
-  motorcyclist: Motorcyclist;
-  customer: Customer;
+  customerId: CustomerId;
+  motorcyclistId: MotorcyclistId;
+  timeSlotId: TimeSlotId;
 }
 
 export class Booking {
   private readonly _bookingId: BookingId;
-  public readonly customer: Customer;
-  public readonly motorcyclist: Motorcyclist;
-  public readonly timeSlot: TimeSlot;
+  public readonly customerId: CustomerId;
+  public readonly motorcyclistId: MotorcyclistId;
+  public readonly timeSlotId: TimeSlotId;
 
   public get id(): string {
     return this._bookingId.value;
@@ -22,9 +22,9 @@ export class Booking {
 
   constructor(props: BookingProps) {
     this._bookingId = props.bookingId;
-    this.motorcyclist = props.motorcyclist;
-    this.customer = props.customer;
-    this.timeSlot = props.timeSlot;
+    this.motorcyclistId = props.motorcyclistId;
+    this.customerId = props.customerId;
+    this.timeSlotId = props.timeSlotId;
   }
 
   public static new(props: Omit<BookingProps, 'bookingId'>) {

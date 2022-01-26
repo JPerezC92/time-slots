@@ -1,31 +1,33 @@
-import { MotorcyclistId } from "./MotorcyclistId";
-import { MotorcyclistIsAvailable } from "./MotorcyclistIsAvailable";
+import { MotorcyclistId } from './MotorcyclistId';
+import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
 
 export class Motorcyclist {
+  private readonly _maxWorkLoad = 3;
   private readonly _motorcyclistId: MotorcyclistId;
-  private _isAvailable: MotorcyclistIsAvailable;
+  public timeSlotAssigned: TimeSlot[];
 
   public get id(): string {
     return this._motorcyclistId.value;
   }
-
   public get isAvailable(): boolean {
-    return this._isAvailable.value;
+    return this.timeSlotAssigned.length < this._maxWorkLoad;
   }
 
   constructor(props: {
     motorcyclistId: MotorcyclistId;
-    available: MotorcyclistIsAvailable;
+    timeSlotAssigned: TimeSlot[];
   }) {
     this._motorcyclistId = props.motorcyclistId;
-    this._isAvailable = props.available;
+    this.timeSlotAssigned = props.timeSlotAssigned;
   }
 
-  public TakeMotorcyclist() {
-    this._isAvailable = this._isAvailable.Take();
+  public assignTimeSlot(timeSlot: TimeSlot) {
+    this.timeSlotAssigned = [...this.timeSlotAssigned, timeSlot];
   }
 
-  public TakeBackMotorcyclist() {
-    this._isAvailable = this._isAvailable.TakeBack();
+  public unassignTimeSlot(timeSlot: TimeSlot) {
+    this.timeSlotAssigned = this.timeSlotAssigned.filter(
+      (timeslot) => !timeslot.equals(timeSlot)
+    );
   }
 }
