@@ -1,67 +1,107 @@
-import { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
+import { Button, Td, Tr } from '@chakra-ui/react';
 import format from 'date-fns/format';
 
-import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
 import { useAuthViewStore } from 'src/Auth/Infrastructure/ZustandAuthStore';
 import { useBookingCanceller } from 'src/Bookings/Infrastructure/controllers/useBookingCanceller';
 import { useBookingCreator } from 'src/Bookings/Infrastructure/controllers/useBookingCreator';
 
 import styles from './TimeSlotRow.module.scss';
 
-const getColor = (timeSlot: TimeSlot): string | undefined => {
-  if (timeSlot.isBookedByCustomer)
-    return styles.TimeSlotsRow_wasBookedForTheCurrentUser;
-  if (timeSlot.isBooked) return styles.TimeSlotsRow_isBooked;
+const getColor = ({
+  isBooked,
+  isBookedByCustomer,
+}: {
+  isBooked: boolean;
+  isBookedByCustomer: boolean;
+}): string | undefined => {
+  if (isBookedByCustomer) return styles.TimeSlotsRow_wasBookedForTheCurrentUser;
+  if (isBooked) return styles.TimeSlotsRow_isBooked;
   return '';
 };
 
-// const TimeSlotAction: FC = ({}) => {
-//   return <></>;
-// };
+interface TimeSlotRowProps {
+  timeSlotId: string;
+  isBooked: boolean;
+  isBookedByCustomer: boolean;
+  start: Date;
+  end: Date;
+  setDisableWhileBooking: (disableWhileBooking: boolean) => void;
+  disableWhileBooking: boolean;
+}
 
-export const TimeSlotRow: FC<{ timeSlot: TimeSlot }> = ({ timeSlot }) => {
-  const { customer } = useAuthViewStore();
-  const timeSlotBooker = useBookingCreator({ timeSlot, customer });
-  const timeSlotBookerCanceller = useBookingCanceller({
-    timeSlot,
-    customer,
-  });
-  const color = useMemo(() => getColor(timeSlot), [timeSlot]);
+export const TimeSlotRow: FC<TimeSlotRowProps> = React.memo(
+  ({
+    timeSlotId,
+    isBooked,
+    isBookedByCustomer,
+    start,
+    end,
+    setDisableWhileBooking,
+    disableWhileBooking,
+  }) => {
+    const { customer } = useAuthViewStore();
+    const bookingCreator = useBookingCreator({ timeSlotId });
+    const bookingCanceller = useBookingCanceller({
+      timeSlotId: timeSlotId,
+      customer,
+    });
+    const color = useMemo(
+      () => getColor({ isBooked, isBookedByCustomer }),
+      [isBooked, isBookedByCustomer]
+    );
 
-  return (
-    <>
-      <tr
-        className={`${styles.TimeSlotsRow} ${color && color}`}
-        // onClick={onClick}
-      >
-        <td>
-          {`${format(timeSlot.start, 'p')} - ${format(timeSlot.end, 'p')}`}{' '}
-          {(timeSlotBooker.isLoading || timeSlotBookerCanceller.isLoading) &&
-            'Cargando'}
-        </td>
+    useEffect(() => {
+      setDisableWhileBooking(bookingCreator.isLoading);
+    }, [bookingCreator.isLoading, setDisableWhileBooking]);
 
-        {customer.isLoggedIn && (
-          <>
-            {/* {timeSlot.isOutOfTime() ? (
-              <td>Time Expired</td>
-            ) : ( */}
-            <td>
-              {!timeSlot.isBooked && (
-                <button type="button" onClick={timeSlotBooker.run}>
-                  Book
-                </button>
-              )}
+    return (
+      <>
+        <Tr className={`${styles.TimeSlotsRow}`} width="min-intrinsic">
+          <Td
+            className={`${color && color}`}
+            borderRadius="base"
+            textAlign="center"
+          >
+            {`${format(start, 'p')} - ${format(end, 'p')}`}
+          </Td>
 
-              {timeSlot.isBooked && timeSlot.isBookedByCustomer && (
-                <button type="button" onClick={timeSlotBookerCanceller.run}>
-                  Cancel booking
-                </button>
-              )}
-            </td>
-            {/* )} */}
-          </>
-        )}
-      </tr>
-    </>
-  );
-};
+          {customer.isLoggedIn && (
+            <>
+              <Td>
+                {!isBooked && (
+                  <Button
+                    backgroundColor="blue.500"
+                    isLoading={bookingCreator.isLoading}
+                    isDisabled={disableWhileBooking}
+                    onClick={bookingCreator.run}
+                    size="sm"
+                    type="button"
+                    width="100%"
+                  >
+                    Book
+                  </Button>
+                )}
+
+                {isBooked && isBookedByCustomer && (
+                  <Button
+                    backgroundColor="red.500"
+                    isLoading={bookingCanceller.isLoading}
+                    onClick={bookingCanceller.run}
+                    size="sm"
+                    type="button"
+                    width="100%"
+                  >
+                    Cancel booking
+                  </Button>
+                )}
+              </Td>
+            </>
+          )}
+        </Tr>
+      </>
+    );
+  }
+);
+
+TimeSlotRow.displayName = 'TimeSlotRow';

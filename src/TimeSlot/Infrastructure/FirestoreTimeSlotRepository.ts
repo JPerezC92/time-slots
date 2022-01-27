@@ -28,8 +28,8 @@ export class FirestoreTimeSlotRepository implements TimeSlotRepository {
     return timeSlots.map(TimeSlotMapper.toDomain) || [];
   }
 
-  async findById(timeSlot: TimeSlot): Promise<TimeSlot> {
-    const docRef = doc(DB, this._path, timeSlot.id);
+  async findById(timeSlotId: string): Promise<TimeSlot> {
+    const docRef = doc(DB, this._path, timeSlotId);
 
     const timeSlotPersistence = {
       id: (await getDoc(docRef)).id,

@@ -1,9 +1,12 @@
 import {
+  arrayRemove,
+  arrayUnion,
   collection,
   doc,
   getDoc,
   getDocs,
   limit,
+  orderBy,
   query,
   updateDoc,
   where,
@@ -13,6 +16,7 @@ import { MotorcyclistRepository } from '../Domain/MotorcyclistRepository';
 import { Motorcyclist } from '../Domain/Motorcyclists';
 import { MotorcyclistMapper } from './mappers/MotorcyclistMapper';
 import { MotorcyclistPersistence } from '../Domain/MotorcyclistPersistence';
+import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
 
 export class FirestoreMotorcyclistRepository implements MotorcyclistRepository {
   private readonly _path = `${DB_NAME}-motorcyclists`;
@@ -32,8 +36,9 @@ export class FirestoreMotorcyclistRepository implements MotorcyclistRepository {
     const collRef = collection(DB, this._path);
     const queryResult = query(
       collRef,
-      where('isAvailable', '==', true),
-      limit(1)
+      // limit(1)
+      // orderBy('timeSlotAssigned', 'asc'),
+      where('timeSlotAssigned.length', '>', 3)
     );
 
     const doc = (await getDocs(queryResult)).docs[0];
@@ -56,11 +61,27 @@ export class FirestoreMotorcyclistRepository implements MotorcyclistRepository {
     return motorcyclists.map(MotorcyclistMapper.toDomain) || [];
   }
 
-  async update(motorcyclist: Motorcyclist): Promise<void> {
-    const motorcyclistPlain = MotorcyclistMapper.toPersistence(motorcyclist);
+  async addTimeSlotAssigned({
+    motorcyclistId,
+    timeSlotId,
+  }: {
+    motorcyclistId: Motorcyclist['id'];
+    timeSlotId: TimeSlot['id'];
+  }): Promise<void> {
+    await updateDoc(doc(collection(DB, this._path), motorcyclistId), {
+      timeSlotAssigned: arrayUnion(timeSlotId),
+    });
+  }
 
-    await updateDoc(doc(collection(DB, this._path), motorcyclist.id), {
-      timeSlotAssigned: motorcyclistPlain.timeSlotAssigned,
+  async removeTimeSlotAssigned({
+    motorcyclistId,
+    timeSlotId,
+  }: {
+    motorcyclistId: Motorcyclist['id'];
+    timeSlotId: TimeSlot['id'];
+  }): Promise<void> {
+    await updateDoc(doc(collection(DB, this._path), motorcyclistId), {
+      timeSlotAssigned: arrayRemove(timeSlotId),
     });
   }
 }

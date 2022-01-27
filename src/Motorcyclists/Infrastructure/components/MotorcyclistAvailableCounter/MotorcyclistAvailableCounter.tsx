@@ -14,7 +14,7 @@ export const MotorcyclistAvailableCounter: FC = () => {
   return (
     <div>
       <h1>
-        motorcyclistAvailableCount {!isLoading && motorcyclistViewState.count}{' '}
+        Motorcyclist available: {!isLoading && motorcyclistViewState.count}{' '}
       </h1>
     </div>
   );

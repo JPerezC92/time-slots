@@ -26,5 +26,9 @@ export const useMotorcyclistAvailableCounter = () => {
     })();
   }, [isLoading, motorcyclistStore]);
 
+  useEffect(() => {
+    return () => setIsLoading(() => false);
+  }, []);
+
   return { isLoading, run };
 };

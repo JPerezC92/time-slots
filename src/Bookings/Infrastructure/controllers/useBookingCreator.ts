@@ -1,49 +1,67 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { BookingCreator } from 'src/Bookings/Application/BookingCreator';
-import { CustomerId } from 'src/Customers/Domain/CustomerId';
+import { Customer } from 'src/Customers/Domain/Customer';
+import { DomainException } from 'src/Shared/Domain/DomainException';
 import { FirestoreBookingRepository } from '../FirestoreBookingRepository';
 import { FirestoreCustomerRepository } from 'src/Customers/Infrastructure/FirestoreCustomerRepository';
 import { FirestoreMotorcyclistRepository } from 'src/Motorcyclists/Infrastructure/FirestoreMotorcyclistRepository';
 import { FirestoreTimeSlotRepository } from 'src/TimeSlot/Infrastructure/FirestoreTimeSlotRepository';
 import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
+import { useAlertStore } from 'src/UI/Alert/Alert';
 import { useZustandMotorcyclistStore } from 'src/Motorcyclists/Infrastructure/useMotorcyclistStore';
 import { useZustandTimeSlotStore } from 'src/TimeSlot/Infrastructure/ZustandTimeSlotStore';
-import { Customer } from 'src/Customers/Domain/Customer';
+import { useAuthViewStore } from 'src/Auth/Infrastructure/ZustandAuthStore';
 
-export const useBookingCreator = ({
-  customer,
-  timeSlot,
-}: {
-  timeSlot: TimeSlot;
-  customer: Customer;
-}) => {
-  const [isLoading, setIsLoading] = useState(false);
+export const useBookingCreator = ({ timeSlotId }: { timeSlotId: string }) => {
+  const { addAlert } = useAlertStore();
   const motorcyclistStore = useZustandMotorcyclistStore();
   const timeSlotStore = useZustandTimeSlotStore();
+  const { customer } = useAuthViewStore();
+
+  const [error, setError] = useState<DomainException>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const run = useCallback(() => setIsLoading(() => true), []);
 
   useEffect(() => {
     (async () => {
-      if (isLoading && !timeSlot.isBooked && customer.isLoggedIn) {
-        const bookingCreator = new BookingCreator({
-          motorcyclistRepository: new FirestoreMotorcyclistRepository(),
-          customerRepository: new FirestoreCustomerRepository(),
-          bookingRepository: new FirestoreBookingRepository(),
-          timeSlotRepository: new FirestoreTimeSlotRepository(),
-          motorcyclistStore,
-          timeSlotStore,
-        });
+      try {
+        if (isLoading && customer.isLoggedIn) {
+          console.log('useBookingCreator');
+          const bookingCreator = new BookingCreator({
+            motorcyclistRepository: new FirestoreMotorcyclistRepository(),
+            customerRepository: new FirestoreCustomerRepository(),
+            bookingRepository: new FirestoreBookingRepository(),
+            timeSlotRepository: new FirestoreTimeSlotRepository(),
+            motorcyclistStore,
+            timeSlotStore,
+          });
 
-        await bookingCreator.execute({
-          customer,
-          timeSlot,
-        });
+          await bookingCreator.execute({ customer, timeSlotId: timeSlotId });
+        }
+
+        if (isLoading) setIsLoading(false);
+      } catch (error) {
+        if (DomainException.isDomainException(error)) {
+          setError(() => error as DomainException);
+        }
+
+        if (isLoading) setIsLoading(false);
       }
-      setIsLoading(false);
     })();
-  }, [customer, isLoading, motorcyclistStore, timeSlot, timeSlotStore]);
+  }, [customer, isLoading, motorcyclistStore, timeSlotId, timeSlotStore]);
+
+  useEffect(() => {
+    if (error) {
+      addAlert({ status: 'error', message: error.message });
+      setError(() => undefined);
+    }
+  }, [addAlert, error]);
+
+  useEffect(() => {
+    return () => setIsLoading(() => false);
+  }, []);
 
   return {
     run,

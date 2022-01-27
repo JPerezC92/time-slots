@@ -5,9 +5,9 @@ import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
 export interface BookingRepository {
   findAllByCustomer(customer: Customer): Promise<Booking[]>;
   findByCustomerAndTimeSlot(props: {
-    customer: Customer;
-    timeSlot: TimeSlot;
-  }): Promise<Booking>;
+    customerId: Customer['id'];
+    timeSlotId: TimeSlot['id'];
+  }): Promise<Booking | undefined>;
   save(booking: Booking): Promise<void>;
   deleteByCustomerAndTimeSlot(props: {
     customer: Customer['id'];

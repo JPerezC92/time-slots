@@ -2,5 +2,5 @@ import { TimeSlotPersistence } from 'src/TimeSlot/Infrastructure/TimeSlotPersist
 
 export interface MotorcyclistPersistence {
   id: string;
-  timeSlotAssigned: TimeSlotPersistence[];
+  timeSlotAssigned: string[];
 }

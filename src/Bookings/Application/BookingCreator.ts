@@ -10,10 +10,11 @@ import { UseCase } from 'src/Shared/Domain/UseCase';
 import { TimeSlotStore } from 'src/TimeSlot/Domain/TimeSlotStore';
 import { TimeSlotFinder } from 'src/TimeSlot/Application/TimeSlotFinder';
 import { MotorcyclistAvailableFinder } from 'src/Motorcyclists/Application/MotorcyclistAvailableFinder';
+import { TimeSlotAlreadyBooked } from 'src/TimeSlot/Domain/TimeSlotAlreadyBooked';
 
 interface BookingCreatorInput {
   customer: Customer;
-  timeSlot: TimeSlot;
+  timeSlotId: string;
 }
 
 export class BookingCreator
@@ -63,14 +64,20 @@ export class BookingCreator
 
   public async execute({
     customer,
-    timeSlot,
+    timeSlotId,
   }: BookingCreatorInput): Promise<void> {
     const [timeSlotFound, motorcyclistFound] = await Promise.all([
-      this._timeSlotRepository.findById(timeSlot),
+      this._timeSlotRepository.findById(timeSlotId),
       this._motorcyclistAvailableFinder.execute(),
     ]);
 
-    if (timeSlotFound.isBooked) throw new Error('Already taken');
+    if (timeSlotFound.isBooked) {
+      await Promise.all([
+        this._timeSlotFinder.execute({ customer }),
+        this._motorcyclistAvailableCounter.execute(),
+      ]);
+      throw new TimeSlotAlreadyBooked(timeSlotFound);
+    }
 
     const booking = customer.Book({
       motorcyclist: motorcyclistFound,
@@ -79,7 +86,10 @@ export class BookingCreator
 
     await Promise.all([
       await this._timeSlotRepository.update(timeSlotFound),
-      await this._motorcyclistRepository.update(motorcyclistFound),
+      await this._motorcyclistRepository.addTimeSlotAssigned({
+        motorcyclistId: motorcyclistFound.id,
+        timeSlotId: timeSlotFound.id,
+      }),
       await this._bookingRepository.save(booking),
     ]);
 

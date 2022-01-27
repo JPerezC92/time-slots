@@ -13,13 +13,14 @@ import {
 } from 'src/Shared/Infrastructure/firebase';
 import { IsLoggedIn } from 'src/Customers/Domain/IsLoggedIn';
 
-interface AuthViewStore {
+export interface AuthViewStore {
   customer: Customer;
 }
+
 const guest = new Customer({
-  customerId: new CustomerId('heEjzI8X1OhuoKHonAMe'),
-  customerName: new CustomerName('Philip'),
-  isLoggedIn: new IsLoggedIn(true),
+  customerId: new CustomerId(''),
+  customerName: new CustomerName('Guest'),
+  isLoggedIn: new IsLoggedIn(false),
 });
 
 export const useAuthMergedStore = create<AuthStore & AuthViewStore>((set) => ({
@@ -34,23 +35,9 @@ export const useAuthMergedStore = create<AuthStore & AuthViewStore>((set) => ({
     }),
   logout: () => signOut(googleAuth).then(() => set({ customer: guest })),
   login: async () => {
-    signInWithPopup(googleAuth, googleAuthProvider);
-    // .then((result) => {
-    //   const { user } = result;
-    //   const credential = GoogleAuthProvider.credentialFromResult(result);
-
-    //   const token = credential?.accessToken;
-    // })
-    // .catch((error) => {
-    //   const errorCode = error.code;
-    //   const errorMessage = error.message;
-    //   // The email of the user's account used.
-    //   const email = error.email;
-    //   // The AuthCredential type that was used.
-    //   const credential = GoogleAuthProvider.credentialFromError(
-    //     error as FirebaseError
-    //   );
-    // });
+    signInWithPopup(googleAuth, googleAuthProvider).catch(() =>
+      console.log('login error')
+    );
   },
 }));
 

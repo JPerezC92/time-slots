@@ -8,7 +8,7 @@ interface TimeSlotViewStore {
   timeSlotCollection: TimeSlot[];
 }
 
-const useTimeSlotMergedStore = create<TimeSlotViewStore & TimeSlotStore>(
+export const useTimeSlotMergedStore = create<TimeSlotViewStore & TimeSlotStore>(
   (set) => ({
     timeSlotCollection: [],
     setTimeSlotCollection: (timeSlotCollection: TimeSlot[]) =>

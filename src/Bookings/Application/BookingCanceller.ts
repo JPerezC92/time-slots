@@ -11,7 +11,7 @@ import { UseCase } from 'src/Shared/Domain/UseCase';
 
 interface BookingCancellerInput {
   customer: Customer;
-  timeSlot: TimeSlot;
+  timeSlotId: string;
 }
 
 export class BookingCanceller
@@ -49,34 +49,42 @@ export class BookingCanceller
 
   public async execute({
     customer,
-    timeSlot,
+    timeSlotId,
   }: BookingCancellerInput): Promise<void> {
-    const bookingFound =
-      await this._bookingRepository.findByCustomerAndTimeSlot({
-        customer,
+    const [bookingFound, timeSlot] = await Promise.all([
+      this._bookingRepository.findByCustomerAndTimeSlot({
+        customerId: customer.id,
+        timeSlotId,
+      }),
+      this._timeSlotRepository.findById(timeSlotId),
+    ]);
+
+    if (bookingFound) {
+      const motorcyclist = await this._motorcyclistRepository.findById(
+        bookingFound.motorcyclistId.value
+      );
+
+      customer.CancelBooking({
+        motorcyclist: motorcyclist,
         timeSlot,
       });
-    const motorcyclist = await this._motorcyclistRepository.findById(
-      bookingFound.motorcyclistId.value
-    );
 
-    customer.CancelBooking({
-      motorcyclist: motorcyclist,
-      timeSlot: timeSlot,
-    });
+      await Promise.all([
+        this._motorcyclistRepository.removeTimeSlotAssigned({
+          motorcyclistId: motorcyclist.id,
+          timeSlotId: timeSlot.id,
+        }),
+        this._timeSlotRepository.update(timeSlot),
+        this._bookingRepository.deleteByCustomerAndTimeSlot({
+          customer: bookingFound.customerId.value,
+          timeSlot: bookingFound.timeSlotId.value,
+        }),
+      ]);
 
-    await Promise.all([
-      this._motorcyclistRepository.update(motorcyclist),
-      this._timeSlotRepository.update(timeSlot),
-      this._bookingRepository.deleteByCustomerAndTimeSlot({
-        customer: bookingFound.customerId.value,
-        timeSlot: bookingFound.timeSlotId.value,
-      }),
-    ]);
-
-    await Promise.all([
-      this._motorcyclistAvailableCounter.execute(),
-      this._timeSlotFinder.execute({ customer }),
-    ]);
+      await Promise.all([
+        this._motorcyclistAvailableCounter.execute(),
+        this._timeSlotFinder.execute({ customer }),
+      ]);
+    }
   }
 }

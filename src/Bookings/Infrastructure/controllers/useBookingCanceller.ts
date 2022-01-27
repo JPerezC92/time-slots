@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { BookingCanceller } from 'src/Bookings/Application/BookingCanceller';
 import { Customer } from 'src/Customers/Domain/Customer';
@@ -11,10 +11,10 @@ import { useZustandTimeSlotStore } from 'src/TimeSlot/Infrastructure/ZustandTime
 
 export const useBookingCanceller = ({
   customer,
-  timeSlot,
+  timeSlotId,
 }: {
   customer: Customer;
-  timeSlot: TimeSlot;
+  timeSlotId: string;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const timeSlotStore = useZustandTimeSlotStore();
@@ -24,7 +24,7 @@ export const useBookingCanceller = ({
 
   useEffect(() => {
     (async () => {
-      if (isLoading && timeSlot.isBookedByCustomer) {
+      if (isLoading) {
         const bookingCanceller = new BookingCanceller({
           bookingRepository: new FirestoreBookingRepository(),
           motorcyclistRepository: new FirestoreMotorcyclistRepository(),
@@ -35,13 +35,17 @@ export const useBookingCanceller = ({
 
         await bookingCanceller.execute({
           customer,
-          timeSlot,
+          timeSlotId: timeSlotId,
         });
 
         setIsLoading(() => false);
       }
     })();
-  }, [customer, isLoading, motorcyclistStore, timeSlot, timeSlotStore]);
+  }, [customer, isLoading, motorcyclistStore, timeSlotId, timeSlotStore]);
+
+  useEffect(() => {
+    return () => setIsLoading(() => false);
+  }, []);
 
   return {
     run,

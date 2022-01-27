@@ -32,22 +32,24 @@ export class FirestoreBookingRepository implements BookingRepository {
   }
 
   async findByCustomerAndTimeSlot(props: {
-    customer: Customer;
-    timeSlot: TimeSlot;
-  }): Promise<Booking> {
+    customerId: string;
+    timeSlotId: string;
+  }): Promise<Booking | undefined> {
     const collRef = collection(DB, this._path);
     const queryResult = query(
       collRef,
-      where('customerId', '==', props.customer.id),
-      where('timeSlotId', '==', props.timeSlot.id)
+      where('customerId', '==', props.customerId),
+      where('timeSlotId', '==', props.timeSlotId)
     );
     const docs = (await getDocs(queryResult)).docs;
-    const bookings = docs.map((doc) => ({
+    const booking = docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
-    }))[0] as BookingPersistence;
+    }))[0] as BookingPersistence | undefined;
 
-    return BookingMapper.toDomain(bookings);
+    if (booking) {
+      return BookingMapper.toDomain(booking);
+    }
   }
 
   async save(booking: Booking): Promise<void> {
@@ -74,8 +76,10 @@ export class FirestoreBookingRepository implements BookingRepository {
       limit(1)
     );
 
-    await deleteDoc(
-      doc(DB, this._path, (await getDocs(queryResult)).docs[0].id)
-    );
+    const docRef = (await getDocs(queryResult)).docs;
+
+    if (docRef.length > 0) {
+      await deleteDoc(doc(DB, this._path, docRef[0].id));
+    }
   }
 }

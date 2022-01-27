@@ -1,13 +1,13 @@
 import { Motorcyclist } from 'src/Motorcyclists/Domain/Motorcyclists';
 import { MotorcyclistId } from 'src/Motorcyclists/Domain/MotorcyclistId';
 import { MotorcyclistPersistence } from '../../Domain/MotorcyclistPersistence';
-import { TimeSlotMapper } from 'src/TimeSlot/Infrastructure/mappers/TimeSlotMapper';
+import { TimeSlotId } from 'src/TimeSlot/Domain/TimeSlotId';
 
 export const MotorcyclistMapper = {
   toPersistence: (motorcyclist: Motorcyclist): MotorcyclistPersistence => ({
     id: motorcyclist.id,
     timeSlotAssigned: motorcyclist.timeSlotAssigned.map(
-      TimeSlotMapper.toPersistence
+      (timeSlotId) => timeSlotId.value
     ),
   }),
 
@@ -15,7 +15,7 @@ export const MotorcyclistMapper = {
     return new Motorcyclist({
       motorcyclistId: new MotorcyclistId(motorcyclist.id),
       timeSlotAssigned: motorcyclist.timeSlotAssigned.map(
-        TimeSlotMapper.toDomain
+        (timeSlotId) => new TimeSlotId(timeSlotId)
       ),
     });
   },
