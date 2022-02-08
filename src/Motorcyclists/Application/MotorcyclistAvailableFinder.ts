@@ -1,7 +1,7 @@
 import { UseCase } from 'src/Shared/Domain/UseCase';
 import { MotorcyclistAvailableService } from '../Domain/MotorcyclistAvailableService';
 import { MotorcyclistRepository } from '../Domain/MotorcyclistRepository';
-import { Motorcyclist } from '../Domain/Motorcyclists';
+import { Motorcyclist } from '../Domain/Motorcyclist';
 
 export class MotorcyclistAvailableFinder
   implements UseCase<Promise<Motorcyclist>>

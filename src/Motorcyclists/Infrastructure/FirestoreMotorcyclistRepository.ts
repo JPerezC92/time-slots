@@ -5,17 +5,13 @@ import {
   doc,
   getDoc,
   getDocs,
-  limit,
-  orderBy,
   query,
   updateDoc,
   where,
 } from 'firebase/firestore';
 import { DB, DB_NAME } from 'src/Shared/Infrastructure/firebase';
 import { MotorcyclistRepository } from '../Domain/MotorcyclistRepository';
-import { Motorcyclist } from '../Domain/Motorcyclists';
-import { MotorcyclistMapper } from './mappers/MotorcyclistMapper';
-import { MotorcyclistPersistence } from '../Domain/MotorcyclistPersistence';
+
 import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
 
 export class FirestoreMotorcyclistRepository implements MotorcyclistRepository {

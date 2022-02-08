@@ -1,7 +1,7 @@
 import { AuthApiRoute } from '@Auth/Infrastructure/auth.routes';
 import { AuthRepository, Credentials } from '@Auth/Domain/AuthRepository';
 import { CustomerPlain } from '@Customers/Domain/CustomerPlain';
-import { JSendResponse } from '@Shared/Infrastructure/JSendResponse';
+import { JSendResponse } from '@Shared/Domain/JSendResponse';
 import { JsTokenCookieService } from '@Auth/Infrastructure/JsTokenCookieService';
 import { ResultStatus } from '@Shared/Domain/ResultStatus';
 

@@ -1,5 +1,5 @@
 import { CustomerPlain } from '@Customers/Domain/CustomerPlain';
-import { JSendResponse } from '@Shared/Infrastructure/JSendResponse';
+import { JSendResponse } from '@Shared/Domain/JSendResponse';
 
 export interface Credentials {
   email: string;

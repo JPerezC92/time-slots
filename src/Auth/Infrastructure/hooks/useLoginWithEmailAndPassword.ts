@@ -9,7 +9,7 @@ export const useLoginWithEmailAndPassword = () => {
   const zustandAuthStore = useRef(useAuthMergedStore());
 
   const [credentials, setCredentials] = useState<Credentials>({
-    email: 'usuario01@gmail.com',
+    email: 'jperez.c92@gmail.com',
     password: '123456789',
   });
 

@@ -5,8 +5,10 @@ import { MotorcyclistAvailableCounter } from 'src/Motorcyclists/Infrastructure/c
 import { TimeSlotRow } from '@TimeSlots/Infrastructure/components/TimeSlotRow';
 import { useTimeSlotsFinder } from '@TimeSlots/Infrastructure/controllers/useTimeSlotsFinder';
 import { useTimeSlotViewStore } from '@TimeSlots/Infrastructure/ZustandTimeSlotStore';
+import { useAuthViewStore } from '@Auth/Infrastructure/ZustandAuthStore';
 
 export const TimeSlotScreen: FC = () => {
+  const { customer } = useAuthViewStore();
   const { timeSlotCollection } = useTimeSlotViewStore();
   const { run: execTimeSlotsFinder } = useTimeSlotsFinder();
 
@@ -14,7 +16,7 @@ export const TimeSlotScreen: FC = () => {
 
   useEffect(() => {
     execTimeSlotsFinder();
-  }, [execTimeSlotsFinder]);
+  }, [execTimeSlotsFinder, customer.isLoggedIn]);
 
   return (
     <>

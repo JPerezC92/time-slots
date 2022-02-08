@@ -1,4 +1,4 @@
-import { ResultStatus } from '../Domain/ResultStatus';
+import { ResultStatus } from './ResultStatus';
 
 export interface JSendSuccess<Type = unknown> {
   status: ResultStatus.SUCCESS;

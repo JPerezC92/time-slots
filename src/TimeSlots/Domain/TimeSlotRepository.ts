@@ -1,7 +1,8 @@
-import { TimeSlot } from './TimeSlot';
+import { JSendResponse } from '@Shared/Domain/JSendResponse';
+import { TimeSlotPlain } from './TimeSlotPlain';
+
+export type FindAllResponse = JSendResponse<{ timeSlots: TimeSlotPlain[] }>;
 
 export interface TimeSlotRepository {
-  findAll(): Promise<TimeSlot[]>;
-  findById(timeSlot: TimeSlot['id']): Promise<TimeSlot>;
-  update(timeSlot: TimeSlot): Promise<void>;
+  findAll(): Promise<FindAllResponse>;
 }

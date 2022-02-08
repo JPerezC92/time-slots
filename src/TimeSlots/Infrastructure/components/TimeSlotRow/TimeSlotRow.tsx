@@ -24,8 +24,8 @@ interface TimeSlotRowProps {
   timeSlotId: string;
   isBooked: boolean;
   isBookedByCustomer: boolean;
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
   setDisableWhileBooking: (disableWhileBooking: boolean) => void;
   disableWhileBooking: boolean;
 }
@@ -46,6 +46,7 @@ export const TimeSlotRow: FC<TimeSlotRowProps> = React.memo(
       timeSlotId: timeSlotId,
       customer,
     });
+
     const color = useMemo(
       () => getColor({ isBooked, isBookedByCustomer }),
       [isBooked, isBookedByCustomer]
@@ -63,7 +64,8 @@ export const TimeSlotRow: FC<TimeSlotRowProps> = React.memo(
             borderRadius="base"
             textAlign="center"
           >
-            {`${format(start, 'p')} - ${format(end, 'p')}`}
+            {/* {`${format(start, 'p')} - ${format(end, 'p')}`} */}
+            {`${start} - ${end}`}
           </Td>
 
           {customer.isLoggedIn && (

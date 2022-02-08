@@ -1,30 +1,23 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { FirestoreMotorcyclistRepository } from '../FirestoreMotorcyclistRepository';
-import { MotorcyclistAvailableCounter } from 'src/Motorcyclists/Application/MotorcyclistAvailableCounter';
-import { useZustandMotorcyclistStore } from '../useMotorcyclistStore';
+import { MotorcyclistFinder } from '@Motorcyclists/Application/MotorcyclistFinder';
+import { NestJSMotorcyclistRepository } from '@Motorcyclists/Infrastructure/NestJSMotorcyclistRepository';
+import { useMotorcyclistMergedStore } from '@Motorcyclists/Infrastructure/useMotorcyclistStore';
 
-export const useMotorcyclistAvailableCounter = () => {
-  const motorcyclistStore = useZustandMotorcyclistStore();
+export const useMotorcyclistFinder = () => {
+  const motorcyclistMergedStore = useRef(useMotorcyclistMergedStore());
   const [isLoading, setIsLoading] = useState(false);
 
-  const run = useCallback(() => setIsLoading(true), []);
+  const run = useCallback(() => {
+    setIsLoading(() => true);
+    const motorcyclistFinder = MotorcyclistFinder({
+      motorcyclistRepository: NestJSMotorcyclistRepository(),
+      motorcyclistStore: motorcyclistMergedStore.current,
+    });
 
-  useEffect(() => {
-    (async () => {
-      if (isLoading) {
-        const motorcyclistRepository = new FirestoreMotorcyclistRepository();
-        const motorcyclistAvailableCounter = new MotorcyclistAvailableCounter({
-          motorcyclistRepository,
-          motorcyclistStore,
-        });
-
-        await motorcyclistAvailableCounter.execute();
-
-        setIsLoading(false);
-      }
-    })();
-  }, [isLoading, motorcyclistStore]);
+    motorcyclistFinder.execute();
+    setIsLoading(() => false);
+  }, []);
 
   useEffect(() => {
     return () => setIsLoading(() => false);

@@ -1,4 +1,4 @@
-import { Motorcyclist } from './Motorcyclists';
+import { Motorcyclist } from './Motorcyclist';
 
 export class MotorcyclistAvailableService {
   public SearchAvailableWithLessWorkload(

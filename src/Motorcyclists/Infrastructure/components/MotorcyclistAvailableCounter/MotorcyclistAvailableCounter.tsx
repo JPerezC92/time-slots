@@ -1,11 +1,15 @@
 import { FC, useEffect } from 'react';
 
-import { useMotorcyclistAvailableCounter } from '../../controllers/useMotorcyclistAvailableCounter';
-import { useMotorcyclistViewStore } from '../../useMotorcyclistStore';
+import { useMotorcyclistFinder } from '@Motorcyclists/Infrastructure/controllers/useMotorcyclistAvailableCounter';
+import { useMotorcyclistViewStore } from '@Motorcyclists/Infrastructure/useMotorcyclistStore';
 
 export const MotorcyclistAvailableCounter: FC = () => {
-  const motorcyclistViewState = useMotorcyclistViewStore();
-  const { isLoading, run } = useMotorcyclistAvailableCounter();
+  const { isLoading, run } = useMotorcyclistFinder();
+  const { motorcyclistList } = useMotorcyclistViewStore();
+
+  const motorcyclistCount = motorcyclistList.filter(
+    (m) => m.isAvailable
+  ).length;
 
   useEffect(() => {
     run();
@@ -13,9 +17,7 @@ export const MotorcyclistAvailableCounter: FC = () => {
 
   return (
     <div>
-      <h1>
-        Motorcyclist available: {!isLoading && motorcyclistViewState.count}{' '}
-      </h1>
+      <h1>Motorcyclistas disponibles: {!isLoading && motorcyclistCount} </h1>
     </div>
   );
 };

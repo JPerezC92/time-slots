@@ -2,7 +2,7 @@ import { Booking } from 'src/Bookings/Domain/Booking';
 import { CustomerId } from './CustomerId';
 import { FirstName } from './FirstName';
 import { IsLoggedIn } from './IsLoggedIn';
-import { Motorcyclist } from 'src/Motorcyclists/Domain/Motorcyclists';
+import { Motorcyclist } from '@Motorcyclists/Domain/Motorcyclist';
 import { MotorcyclistId } from 'src/Motorcyclists/Domain/MotorcyclistId';
 import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
 import { TimeSlotId } from '@TimeSlots/Domain/TimeSlotId';

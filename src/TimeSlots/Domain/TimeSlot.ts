@@ -4,6 +4,7 @@ import { TimeSlotId } from './TimeSlotId';
 import { TimeSlotIsBooked } from './TimeSlotIsBooked';
 import { TimeSlotStart } from './TimeSlotStart';
 import { IsBookedByCustomer } from './IsBookedByCustomer';
+import { TimeSlotPlain } from './TimeSlotPlain';
 
 export class TimeSlot {
   private readonly _timeSlotId: TimeSlotId;
@@ -15,16 +16,15 @@ export class TimeSlot {
   public get id(): string {
     return this._timeSlotId.value;
   }
-  public get start(): Date {
+  public get start(): string {
     return this._startTime.value;
   }
-  public get end(): Date {
+  public get end(): string {
     return this._endTime.value;
   }
   public get isBooked(): boolean {
     return this._isBooked.value;
   }
-
   public get isBookedByCustomer(): boolean {
     return this._isBookedByCustomer.value;
   }
@@ -43,6 +43,16 @@ export class TimeSlot {
     this._isBookedByCustomer = props.isBookedByCustomer;
   }
 
+  public static fromPlain(object: TimeSlotPlain): TimeSlot {
+    return new TimeSlot({
+      timeSlotId: new TimeSlotId(object.id),
+      startTime: new TimeSlotStart(object.start),
+      endTime: new TimeSlotEnd(object.end),
+      isBooked: new TimeSlotIsBooked(object.isBooked),
+      isBookedByCustomer: new IsBookedByCustomer(object.isBookedByCustomer),
+    });
+  }
+
   public book(): void {
     this._isBooked = new TimeSlotIsBooked(true);
   }
@@ -53,15 +63,5 @@ export class TimeSlot {
 
   public equals(other: TimeSlot): boolean {
     return other instanceof TimeSlot && this.id === other.id;
-  }
-
-  public isOutOfTime(): boolean {
-    const now = new Date().getTime();
-    return now > this.end.getTime();
-  }
-
-  public checkIfItIsBookedByCustomer(booking: Booking): void {
-    if (this.id === booking.timeSlotId.value)
-      this._isBookedByCustomer = this._isBookedByCustomer.itWas();
   }
 }

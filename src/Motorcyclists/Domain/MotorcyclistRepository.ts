@@ -1,22 +1,6 @@
-import { Motorcyclist } from './Motorcyclists';
-import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
+import { JSendResponse } from '@Shared/Domain/JSendResponse';
+import { MotorcyclistPlain } from './MotorcyclistPlain';
 
 export interface MotorcyclistRepository {
-  findById(motorcyclistId: string): Promise<Motorcyclist>;
-  findOneAvailable(): Promise<Motorcyclist>;
-  findAll(): Promise<Motorcyclist[]>;
-  addTimeSlotAssigned({
-    motorcyclistId,
-    timeSlotId,
-  }: {
-    motorcyclistId: Motorcyclist['id'];
-    timeSlotId: TimeSlot['id'];
-  }): Promise<void>;
-  removeTimeSlotAssigned({
-    motorcyclistId,
-    timeSlotId,
-  }: {
-    motorcyclistId: Motorcyclist['id'];
-    timeSlotId: TimeSlot['id'];
-  }): Promise<void>;
+  findAll(): Promise<JSendResponse<{ motorcyclists: MotorcyclistPlain[] }>>;
 }
