@@ -3,10 +3,10 @@ import { Customer } from 'src/Customers/Domain/Customer';
 import { MotorcyclistAvailableCounter } from 'src/Motorcyclists/Application/MotorcyclistAvailableCounter';
 import { MotorcyclistRepository } from 'src/Motorcyclists/Domain/MotorcyclistRepository';
 import { MotorcyclistStore } from 'src/Motorcyclists/Domain/MotorcyclistStore';
-import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
-import { TimeSlotFinder } from 'src/TimeSlot/Application/TimeSlotFinder';
-import { TimeSlotRepository } from 'src/TimeSlot/Domain/TimeSlotRepository';
-import { TimeSlotStore } from 'src/TimeSlot/Domain/TimeSlotStore';
+import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
+import { TimeSlotFinder } from '@TimeSlots/Application/TimeSlotFinder';
+import { TimeSlotRepository } from '@TimeSlots/Domain/TimeSlotRepository';
+import { TimeSlotStore } from '@TimeSlots/Domain/TimeSlotStore';
 import { UseCase } from 'src/Shared/Domain/UseCase';
 
 interface BookingCancellerInput {

@@ -1,6 +1,6 @@
 import { Booking } from './Booking';
 import { Customer } from 'src/Customers/Domain/Customer';
-import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
+import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
 
 export interface BookingRepository {
   findAllByCustomer(customer: Customer): Promise<Booking[]>;

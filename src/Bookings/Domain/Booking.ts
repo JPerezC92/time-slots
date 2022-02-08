@@ -1,7 +1,7 @@
 import { BookingId } from './BookingId';
 import { CustomerId } from 'src/Customers/Domain/CustomerId';
 import { MotorcyclistId } from 'src/Motorcyclists/Domain/MotorcyclistId';
-import { TimeSlotId } from 'src/TimeSlot/Domain/TimeSlotId';
+import { TimeSlotId } from '@TimeSlots/Domain/TimeSlotId';
 
 interface BookingProps {
   bookingId: BookingId;

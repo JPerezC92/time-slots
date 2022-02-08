@@ -1,5 +1,7 @@
+import { Customer } from '@Customers/Domain/Customer';
+
 export interface AuthStore {
   login: () => void;
   logout: () => void;
-  updateCredentials: (props: { username: string; id: string }) => void;
+  updateCustomer: (custome: Customer) => void;
 }

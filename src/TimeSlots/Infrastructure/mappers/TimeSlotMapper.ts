@@ -1,10 +1,10 @@
-import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
-import { TimeSlotEnd } from 'src/TimeSlot/Domain/TimeSlotEnd';
-import { TimeSlotId } from 'src/TimeSlot/Domain/TimeSlotId';
-import { TimeSlotIsBooked } from 'src/TimeSlot/Domain/TimeSlotIsBooked';
+import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
+import { TimeSlotEnd } from '@TimeSlots/Domain/TimeSlotEnd';
+import { TimeSlotId } from '@TimeSlots/Domain/TimeSlotId';
+import { TimeSlotIsBooked } from '@TimeSlots/Domain/TimeSlotIsBooked';
 import { TimeSlotPersistence } from '../TimeSlotPersistence';
-import { TimeSlotStart } from 'src/TimeSlot/Domain/TimeSlotStart';
-import { IsBookedByCustomer } from 'src/TimeSlot/Domain/IsBookedByCustomer';
+import { TimeSlotStart } from '@TimeSlots/Domain/TimeSlotStart';
+import { IsBookedByCustomer } from '@TimeSlots/Domain/IsBookedByCustomer';
 import parse from 'date-fns/parse';
 import format from 'date-fns/format';
 

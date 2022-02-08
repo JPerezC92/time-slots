@@ -14,7 +14,7 @@ import { BookingPersistence } from '../Domain/BookingPersistence';
 import { BookingRepository } from '../Domain/BookingRepository';
 import { Customer } from 'src/Customers/Domain/Customer';
 import { DB, DB_NAME } from 'src/Shared/Infrastructure/firebase';
-import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
+import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
 
 export class FirestoreBookingRepository implements BookingRepository {
   private readonly _path = `${DB_NAME}-bookings`;

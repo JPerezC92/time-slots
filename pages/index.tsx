@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 
 import { Layout } from 'src/UI/Layout';
-import { TimeSlotScreen } from 'src/TimeSlot/Infrastructure/components/TimeSlotScreen';
+import { TimeSlotScreen } from '@TimeSlots/Infrastructure/components/TimeSlotScreen';
 
 const Home: NextPage = () => {
   return (

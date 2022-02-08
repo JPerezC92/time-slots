@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { FirestoreBookingRepository } from 'src/Bookings/Infrastructure/FirestoreBookingRepository';
 import { FirestoreTimeSlotRepository } from '../FirestoreTimeSlotRepository';
-import { TimeSlotFinder } from 'src/TimeSlot/Application/TimeSlotFinder';
+import { TimeSlotFinder } from '@TimeSlots/Application/TimeSlotFinder';
 import { useAuthViewStore } from 'src/Auth/Infrastructure/ZustandAuthStore';
 import { useZustandTimeSlotStore } from '../ZustandTimeSlotStore';
 

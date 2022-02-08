@@ -3,7 +3,7 @@ import { BookingId } from 'src/Bookings/Domain/BookingId';
 import { BookingPersistence } from '../../Domain/BookingPersistence';
 import { CustomerId } from 'src/Customers/Domain/CustomerId';
 import { MotorcyclistId } from 'src/Motorcyclists/Domain/MotorcyclistId';
-import { TimeSlotId } from 'src/TimeSlot/Domain/TimeSlotId';
+import { TimeSlotId } from '@TimeSlots/Domain/TimeSlotId';
 
 export const BookingMapper = {
   toPersistence: (booking: Booking): BookingPersistence => {

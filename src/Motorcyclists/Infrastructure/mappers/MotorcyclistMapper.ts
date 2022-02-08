@@ -1,7 +1,7 @@
 import { Motorcyclist } from 'src/Motorcyclists/Domain/Motorcyclists';
 import { MotorcyclistId } from 'src/Motorcyclists/Domain/MotorcyclistId';
 import { MotorcyclistPersistence } from '../../Domain/MotorcyclistPersistence';
-import { TimeSlotId } from 'src/TimeSlot/Domain/TimeSlotId';
+import { TimeSlotId } from '@TimeSlots/Domain/TimeSlotId';
 
 export const MotorcyclistMapper = {
   toPersistence: (motorcyclist: Motorcyclist): MotorcyclistPersistence => ({

@@ -4,13 +4,13 @@ import { CustomerRepository } from 'src/Customers/Domain/CustomerRepository';
 import { MotorcyclistAvailableCounter } from 'src/Motorcyclists/Application/MotorcyclistAvailableCounter';
 import { MotorcyclistRepository } from 'src/Motorcyclists/Domain/MotorcyclistRepository';
 import { MotorcyclistStore } from 'src/Motorcyclists/Domain/MotorcyclistStore';
-import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
-import { TimeSlotRepository } from 'src/TimeSlot/Domain/TimeSlotRepository';
+import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
+import { TimeSlotRepository } from '@TimeSlots/Domain/TimeSlotRepository';
 import { UseCase } from 'src/Shared/Domain/UseCase';
-import { TimeSlotStore } from 'src/TimeSlot/Domain/TimeSlotStore';
-import { TimeSlotFinder } from 'src/TimeSlot/Application/TimeSlotFinder';
+import { TimeSlotStore } from '@TimeSlots/Domain/TimeSlotStore';
+import { TimeSlotFinder } from '@TimeSlots/Application/TimeSlotFinder';
 import { MotorcyclistAvailableFinder } from 'src/Motorcyclists/Application/MotorcyclistAvailableFinder';
-import { TimeSlotAlreadyBooked } from 'src/TimeSlot/Domain/TimeSlotAlreadyBooked';
+import { TimeSlotAlreadyBooked } from '@TimeSlots/Domain/TimeSlotAlreadyBooked';
 
 interface BookingCreatorInput {
   customer: Customer;

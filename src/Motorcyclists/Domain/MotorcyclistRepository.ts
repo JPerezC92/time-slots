@@ -1,5 +1,5 @@
 import { Motorcyclist } from './Motorcyclists';
-import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
+import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
 
 export interface MotorcyclistRepository {
   findById(motorcyclistId: string): Promise<Motorcyclist>;

@@ -16,7 +16,7 @@ import { MotorcyclistRepository } from '../Domain/MotorcyclistRepository';
 import { Motorcyclist } from '../Domain/Motorcyclists';
 import { MotorcyclistMapper } from './mappers/MotorcyclistMapper';
 import { MotorcyclistPersistence } from '../Domain/MotorcyclistPersistence';
-import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
+import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
 
 export class FirestoreMotorcyclistRepository implements MotorcyclistRepository {
   private readonly _path = `${DB_NAME}-motorcyclists`;

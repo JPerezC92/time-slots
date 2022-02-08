@@ -15,6 +15,15 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": "./",
+    "paths": {
+      "@Auth/*": ["src/Auth/*"],
+      "@Bookings/*": ["src/Bookings/*"],
+      "@Customers/*": ["src/Customers/*"],
+      "@Motorcyclists/*": ["src/Motorcyclists/*"],
+      "@Shared/*": ["src/Shared/*"],
+      "@TimeSlots/*": ["src/TimeSlots/*"],
+      "@UI/*": ["src/UI/*"]
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

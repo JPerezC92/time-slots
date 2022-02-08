@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { Box, Button } from '@chakra-ui/react';
+import { Box, Button, Input } from '@chakra-ui/react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { googleAuth } from 'src/Shared/Infrastructure/firebase';
 import {
@@ -7,25 +7,42 @@ import {
   useAuthMergedStore,
 } from 'src/Auth/Infrastructure/ZustandAuthStore';
 import { AuthStore } from 'src/Auth/Domain/AuthStore';
+import { useLoginWithEmailAndPassword } from 'src/Auth/Infrastructure/hooks/useLoginWithEmailAndPassword';
 
-const selectUpdateCredentials = (state: AuthStore) => state.updateCredentials;
 const selectLogout = (state: AuthStore) => state.logout;
-const selectLogin = (state: AuthStore) => state.login;
+
 const selectCustomer = (state: AuthViewStore) => state.customer;
+
+const LoginForm: FC = () => {
+  const { credentials, onChange, run } = useLoginWithEmailAndPassword();
+
+  return (
+    <>
+      <Input
+        id="email"
+        name="email"
+        onChange={onChange}
+        type="email"
+        value={credentials.email}
+      />
+      <Input
+        id="password"
+        name="password"
+        onChange={onChange}
+        type="password"
+        value={credentials.email}
+      />
+      <Button type="button" bg="blue.500" onClick={run}>
+        Login
+      </Button>
+    </>
+  );
+};
 
 export const Layout: FC = ({ children }) => {
   const customer = useAuthMergedStore(selectCustomer);
-  const login = useAuthMergedStore(selectLogin);
-  const logout = useAuthMergedStore(selectLogout);
-  const updateCredentials = useAuthMergedStore(selectUpdateCredentials);
 
-  useEffect(() => {
-    onAuthStateChanged(googleAuth, (user) => {
-      if (user) {
-        updateCredentials({ id: user.uid, username: user.displayName || '' });
-      }
-    });
-  }, [updateCredentials]);
+  const logout = useAuthMergedStore(selectLogout);
 
   return (
     <Box
@@ -44,11 +61,10 @@ export const Layout: FC = ({ children }) => {
         gap="1rem"
         padding="0.5rem"
       >
-        <h1>{customer.isLoggedIn && customer.name}</h1>
+        <h1>{customer.isLoggedIn && customer.firstName}</h1>
+
         {!customer.isLoggedIn ? (
-          <Button type="button" bg="blue.500" onClick={login}>
-            Login
-          </Button>
+          <LoginForm />
         ) : (
           <Button type="button" bg="red.500" onClick={logout}>
             Logout

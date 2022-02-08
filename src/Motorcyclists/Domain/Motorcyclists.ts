@@ -1,6 +1,6 @@
 import { MotorcyclistId } from './MotorcyclistId';
-import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
-import { TimeSlotId } from 'src/TimeSlot/Domain/TimeSlotId';
+import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
+import { TimeSlotId } from '@TimeSlots/Domain/TimeSlotId';
 
 export class Motorcyclist {
   private readonly _maxWorkLoad = 3;

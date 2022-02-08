@@ -6,11 +6,11 @@ import { DomainException } from 'src/Shared/Domain/DomainException';
 import { FirestoreBookingRepository } from '../FirestoreBookingRepository';
 import { FirestoreCustomerRepository } from 'src/Customers/Infrastructure/FirestoreCustomerRepository';
 import { FirestoreMotorcyclistRepository } from 'src/Motorcyclists/Infrastructure/FirestoreMotorcyclistRepository';
-import { FirestoreTimeSlotRepository } from 'src/TimeSlot/Infrastructure/FirestoreTimeSlotRepository';
-import { TimeSlot } from 'src/TimeSlot/Domain/TimeSlot';
+import { FirestoreTimeSlotRepository } from '@TimeSlots/Infrastructure/FirestoreTimeSlotRepository';
+import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
 import { useAlertStore } from 'src/UI/Alert/Alert';
 import { useZustandMotorcyclistStore } from 'src/Motorcyclists/Infrastructure/useMotorcyclistStore';
-import { useZustandTimeSlotStore } from 'src/TimeSlot/Infrastructure/ZustandTimeSlotStore';
+import { useZustandTimeSlotStore } from '@TimeSlots/Infrastructure/ZustandTimeSlotStore';
 import { useAuthViewStore } from 'src/Auth/Infrastructure/ZustandAuthStore';
 
 export const useBookingCreator = ({ timeSlotId }: { timeSlotId: string }) => {

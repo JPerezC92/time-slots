@@ -2,9 +2,9 @@ import { Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import { FC, useEffect, useState } from 'react';
 
 import { MotorcyclistAvailableCounter } from 'src/Motorcyclists/Infrastructure/components/MotorcyclistAvailableCounter';
-import { TimeSlotRow } from 'src/TimeSlot/Infrastructure/components/TimeSlotRow';
-import { useTimeSlotsFinder } from 'src/TimeSlot/Infrastructure/controllers/useTimeSlotsFinder';
-import { useTimeSlotViewStore } from 'src/TimeSlot/Infrastructure/ZustandTimeSlotStore';
+import { TimeSlotRow } from '@TimeSlots/Infrastructure/components/TimeSlotRow';
+import { useTimeSlotsFinder } from '@TimeSlots/Infrastructure/controllers/useTimeSlotsFinder';
+import { useTimeSlotViewStore } from '@TimeSlots/Infrastructure/ZustandTimeSlotStore';
 
 export const TimeSlotScreen: FC = () => {
   const { timeSlotCollection } = useTimeSlotViewStore();
