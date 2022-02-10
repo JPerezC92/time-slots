@@ -1,50 +1,28 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { BookingCanceller } from 'src/Bookings/Application/BookingCanceller';
-import { Customer } from 'src/Customers/Domain/Customer';
-import { FirestoreBookingRepository } from '../FirestoreBookingRepository';
-import { FirestoreMotorcyclistRepository } from 'src/Motorcyclists/Infrastructure/FirestoreMotorcyclistRepository';
-import { FirestoreTimeSlotRepository } from '@TimeSlots/Infrastructure/FirestoreTimeSlotRepository';
-import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
-import { useZustandMotorcyclistStore } from 'src/Motorcyclists/Infrastructure/useMotorcyclistStore';
-import { useZustandTimeSlotStore } from '@TimeSlots/Infrastructure/ZustandTimeSlotStore';
+import { BookingCanceller } from '@Bookings/Application/BookingCanceller';
+import { NestJSBookingRepository } from '@Bookings/Infrastructure/NestJSBookingRepository';
+import { NestJSTimeSlotRepository } from '@TimeSlots/Infrastructure/NestJSTimeSlotRepository';
+import { useTimeSlotMergedStore } from '@TimeSlots/Infrastructure/ZustandTimeSlotStore';
+import { useBookingMergerStore } from '../ZustandBookingStore';
 
-export const useBookingCanceller = ({
-  customer,
-  timeSlotId,
-}: {
-  customer: Customer;
-  timeSlotId: string;
-}) => {
+export const useBookingCanceller = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const timeSlotStore = useZustandTimeSlotStore();
-  const motorcyclistStore = useZustandMotorcyclistStore();
+  const timeSlotStore = useRef(useTimeSlotMergedStore());
+  const bookingStore = useRef(useBookingMergerStore());
 
-  const run = useCallback(() => setIsLoading(() => true), []);
+  const run = useCallback(async ({ timeSlotId }: { timeSlotId: string }) => {
+    setIsLoading(() => true);
+    const bookingCanceller = BookingCanceller({
+      bookingRepository: NestJSBookingRepository(),
+      timeSlotRepository: NestJSTimeSlotRepository(),
+      timeSlotStore: timeSlotStore.current,
+      bookingStore: bookingStore.current,
+    });
 
-  useEffect(() => {
-    (async () => {
-      if (isLoading) {
-        const bookingCanceller = new BookingCanceller({
-          bookingRepository: new FirestoreBookingRepository(),
-          motorcyclistRepository: new FirestoreMotorcyclistRepository(),
-          timeSlotRepository: new FirestoreTimeSlotRepository(),
-          timeSlotStore,
-          motorcyclistStore,
-        });
+    await bookingCanceller.execute({ timeSlotId });
 
-        await bookingCanceller.execute({
-          customer,
-          timeSlotId: timeSlotId,
-        });
-
-        setIsLoading(() => false);
-      }
-    })();
-  }, [customer, isLoading, motorcyclistStore, timeSlotId, timeSlotStore]);
-
-  useEffect(() => {
-    return () => setIsLoading(() => false);
+    setIsLoading(() => false);
   }, []);
 
   return {

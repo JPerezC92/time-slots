@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
 import create from 'zustand';
 import shallow from 'zustand/shallow';
-import { TimeSlot } from '../Domain/TimeSlot';
-import { TimeSlotStore } from '../Domain/TimeSlotStore';
+
+import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
+import { TimeSlotStore } from '@TimeSlots/Domain/TimeSlotStore';
 
 interface TimeSlotViewStore {
   timeSlotCollection: TimeSlot[];

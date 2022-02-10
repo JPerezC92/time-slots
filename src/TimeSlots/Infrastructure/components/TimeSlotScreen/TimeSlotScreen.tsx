@@ -1,22 +1,30 @@
 import { Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import { FC, useEffect, useState } from 'react';
 
-import { MotorcyclistAvailableCounter } from 'src/Motorcyclists/Infrastructure/components/MotorcyclistAvailableCounter';
+import { MotorcyclistAvailableCounter } from '@Motorcyclists/Infrastructure/components/MotorcyclistAvailableCounter';
 import { TimeSlotRow } from '@TimeSlots/Infrastructure/components/TimeSlotRow';
+import { useAuthViewStore } from '@Auth/Infrastructure/ZustandAuthStore';
+import { useBookingFinder } from '@Bookings/Infrastructure/controllers/useBookingFinder';
 import { useTimeSlotsFinder } from '@TimeSlots/Infrastructure/controllers/useTimeSlotsFinder';
 import { useTimeSlotViewStore } from '@TimeSlots/Infrastructure/ZustandTimeSlotStore';
-import { useAuthViewStore } from '@Auth/Infrastructure/ZustandAuthStore';
 
 export const TimeSlotScreen: FC = () => {
   const { customer } = useAuthViewStore();
   const { timeSlotCollection } = useTimeSlotViewStore();
-  const { run: execTimeSlotsFinder } = useTimeSlotsFinder();
+  const { run: timeSlotsFinderRun } = useTimeSlotsFinder();
+  const { run: bookingFinderRun } = useBookingFinder();
 
   const [disableWhileBooking, setDisableWhileBooking] = useState(false);
 
   useEffect(() => {
-    execTimeSlotsFinder();
-  }, [execTimeSlotsFinder, customer.isLoggedIn]);
+    timeSlotsFinderRun();
+  }, [timeSlotsFinderRun, customer.isLoggedIn]);
+
+  useEffect(() => {
+    if (customer.isLoggedIn) {
+      bookingFinderRun();
+    }
+  }, [bookingFinderRun, customer.isLoggedIn]);
 
   return (
     <>

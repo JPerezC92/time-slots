@@ -5,7 +5,7 @@ import format from 'date-fns/format';
 import { useAuthViewStore } from 'src/Auth/Infrastructure/ZustandAuthStore';
 import { useBookingCanceller } from 'src/Bookings/Infrastructure/controllers/useBookingCanceller';
 import { useBookingCreator } from 'src/Bookings/Infrastructure/controllers/useBookingCreator';
-
+import { useBookingMergerStore } from '@Bookings/Infrastructure/ZustandBookingStore';
 import styles from './TimeSlotRow.module.scss';
 
 const getColor = ({
@@ -41,11 +41,11 @@ export const TimeSlotRow: FC<TimeSlotRowProps> = React.memo(
     disableWhileBooking,
   }) => {
     const { customer } = useAuthViewStore();
+    const bookingList = useBookingMergerStore((s) => s.bookingList);
     const bookingCreator = useBookingCreator({ timeSlotId });
-    const bookingCanceller = useBookingCanceller({
-      timeSlotId: timeSlotId,
-      customer,
-    });
+    const bookingCanceller = useBookingCanceller();
+
+    const booking = bookingList.find((b) => b.timeSlotId.value === timeSlotId);
 
     const color = useMemo(
       () => getColor({ isBooked, isBookedByCustomer }),
@@ -89,7 +89,10 @@ export const TimeSlotRow: FC<TimeSlotRowProps> = React.memo(
                   <Button
                     backgroundColor="red.500"
                     isLoading={bookingCanceller.isLoading}
-                    onClick={bookingCanceller.run}
+                    onClick={() =>
+                      booking &&
+                      bookingCanceller.run({ timeSlotId: booking.id })
+                    }
                     size="sm"
                     type="button"
                     width="100%"

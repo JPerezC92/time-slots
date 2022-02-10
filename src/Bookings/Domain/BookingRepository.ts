@@ -1,16 +1,11 @@
-import { Booking } from './Booking';
-import { Customer } from 'src/Customers/Domain/Customer';
+import { Booking } from '@Bookings/Domain/Booking';
+import { Customer } from '@Customers/Domain/Customer';
+import { JSendResponse } from '@Shared/Domain/JSendResponse';
 import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
+import { BookingPlain } from './BookingPlain';
 
 export interface BookingRepository {
-  findAllByCustomer(customer: Customer): Promise<Booking[]>;
-  findByCustomerAndTimeSlot(props: {
-    customerId: Customer['id'];
-    timeSlotId: TimeSlot['id'];
-  }): Promise<Booking | undefined>;
-  save(booking: Booking): Promise<void>;
-  deleteByCustomerAndTimeSlot(props: {
-    customer: Customer['id'];
-    timeSlot: TimeSlot['id'];
-  }): Promise<void>;
+  save(timeSlot: TimeSlot): Promise<JSendResponse<null>>;
+  delete(bookingId: Booking['id']): Promise<JSendResponse<null>>;
+  findAllByCustomer(): Promise<JSendResponse<{ bookings: BookingPlain[] }>>;
 }
