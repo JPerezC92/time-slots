@@ -11,91 +11,55 @@ import { TimeSlotStore } from '@TimeSlots/Domain/TimeSlotStore';
 import { TimeSlotFinder } from '@TimeSlots/Application/TimeSlotFinder';
 import { MotorcyclistAvailableFinder } from 'src/Motorcyclists/Application/MotorcyclistAvailableFinder';
 import { TimeSlotAlreadyBooked } from '@TimeSlots/Domain/TimeSlotAlreadyBooked';
+import { ResultStatus } from '@Shared/Domain/ResultStatus';
+import { MotorcyclistFinder } from '@Motorcyclists/Application/MotorcyclistFinder';
+import { BookingFinder } from './BookingFinder';
+import { BookingStore } from '@Bookings/Domain/BookingStore';
 
-interface BookingCreatorInput {
-  customer: Customer;
+interface Input {
   timeSlotId: string;
 }
 
-export class BookingCreator
-  implements UseCase<Promise<void>, BookingCreatorInput>
-{
-  private readonly _bookingRepository: BookingRepository;
-  private readonly _customerRepository: CustomerRepository;
-  private readonly _motorcyclistRepository: MotorcyclistRepository;
-  private readonly _motorcyclistStore: MotorcyclistStore;
-  private readonly _timeSlotRepository: TimeSlotRepository;
-  private readonly _timeSlotStore: TimeSlotStore;
+export const BookingCreator: (props: {
+  bookingRepository: BookingRepository;
+  bookingStore: BookingStore;
+  motorcyclistRepository: MotorcyclistRepository;
+  motorcyclistStore: MotorcyclistStore;
+  timeSlotRepository: TimeSlotRepository;
+  timeSlotStore: TimeSlotStore;
+}) => UseCase<Promise<void>, Input> = ({
+  bookingRepository,
+  bookingStore,
+  motorcyclistRepository,
+  motorcyclistStore,
+  timeSlotRepository,
+  timeSlotStore,
+}) => {
+  const bookingFinder = BookingFinder({ bookingRepository, bookingStore });
+  const motorcyclistFinder = MotorcyclistFinder({
+    motorcyclistRepository,
+    motorcyclistStore,
+  });
+  const timeSlotFinder = TimeSlotFinder({ timeSlotRepository, timeSlotStore });
 
-  private readonly _timeSlotFinder: TimeSlotFinder;
-  private readonly _motorcyclistAvailableCounter: MotorcyclistAvailableCounter;
-  private readonly _motorcyclistAvailableFinder: MotorcyclistAvailableFinder;
+  return {
+    execute: async ({ timeSlotId }) => {
+      const result = await bookingRepository.save({ timeSlotId });
 
-  constructor(props: {
-    bookingRepository: BookingRepository;
-    customerRepository: CustomerRepository;
-    motorcyclistRepository: MotorcyclistRepository;
-    motorcyclistStore: MotorcyclistStore;
-    timeSlotRepository: TimeSlotRepository;
-    timeSlotStore: TimeSlotStore;
-  }) {
-    this._bookingRepository = props.bookingRepository;
-    this._customerRepository = props.customerRepository;
-    this._motorcyclistRepository = props.motorcyclistRepository;
-    this._motorcyclistStore = props.motorcyclistStore;
-    this._timeSlotRepository = props.timeSlotRepository;
-    this._timeSlotStore = props.timeSlotStore;
+      if (result.status === ResultStatus.FAIL) {
+        await Promise.all([
+          motorcyclistFinder.execute(),
+          timeSlotFinder.execute(),
+        ]);
+      }
 
-    this._timeSlotFinder = new TimeSlotFinder({
-      timeSlotRepository: this._timeSlotRepository,
-      timeSlotStore: this._timeSlotStore,
-      bookingRepository: this._bookingRepository,
-    });
-
-    this._motorcyclistAvailableFinder = new MotorcyclistAvailableFinder({
-      motorcyclistRepository: this._motorcyclistRepository,
-    });
-
-    this._motorcyclistAvailableCounter = new MotorcyclistAvailableCounter({
-      motorcyclistRepository: this._motorcyclistRepository,
-      motorcyclistStore: this._motorcyclistStore,
-    });
-  }
-
-  public async execute({
-    customer,
-    timeSlotId,
-  }: BookingCreatorInput): Promise<void> {
-    const [timeSlotFound, motorcyclistFound] = await Promise.all([
-      this._timeSlotRepository.findById(timeSlotId),
-      this._motorcyclistAvailableFinder.execute(),
-    ]);
-
-    if (timeSlotFound.isBooked) {
-      await Promise.all([
-        this._timeSlotFinder.execute({ customer }),
-        this._motorcyclistAvailableCounter.execute(),
-      ]);
-      throw new TimeSlotAlreadyBooked(timeSlotFound);
-    }
-
-    const booking = customer.Book({
-      motorcyclist: motorcyclistFound,
-      timeSlot: timeSlotFound,
-    });
-
-    await Promise.all([
-      await this._timeSlotRepository.update(timeSlotFound),
-      await this._motorcyclistRepository.addTimeSlotAssigned({
-        motorcyclistId: motorcyclistFound.id,
-        timeSlotId: timeSlotFound.id,
-      }),
-      await this._bookingRepository.save(booking),
-    ]);
-
-    await Promise.all([
-      this._timeSlotFinder.execute({ customer }),
-      this._motorcyclistAvailableCounter.execute(),
-    ]);
-  }
-}
+      if (result.status === ResultStatus.SUCCESS) {
+        await Promise.all([
+          bookingFinder.execute(),
+          motorcyclistFinder.execute(),
+          timeSlotFinder.execute(),
+        ]);
+      }
+    },
+  };
+};

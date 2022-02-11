@@ -42,7 +42,7 @@ export const TimeSlotRow: FC<TimeSlotRowProps> = React.memo(
   }) => {
     const { customer } = useAuthViewStore();
     const bookingList = useBookingMergerStore((s) => s.bookingList);
-    const bookingCreator = useBookingCreator({ timeSlotId });
+    const bookingCreator = useBookingCreator();
     const bookingCanceller = useBookingCanceller();
 
     const booking = bookingList.find((b) => b.timeSlotId.value === timeSlotId);
@@ -76,7 +76,7 @@ export const TimeSlotRow: FC<TimeSlotRowProps> = React.memo(
                     backgroundColor="blue.500"
                     isLoading={bookingCreator.isLoading}
                     isDisabled={disableWhileBooking}
-                    onClick={bookingCreator.run}
+                    onClick={() => bookingCreator.run({ timeSlotId })}
                     size="sm"
                     type="button"
                     width="100%"
@@ -90,8 +90,8 @@ export const TimeSlotRow: FC<TimeSlotRowProps> = React.memo(
                     backgroundColor="red.500"
                     isLoading={bookingCanceller.isLoading}
                     onClick={() =>
-                      booking &&
-                      bookingCanceller.run({ timeSlotId: booking.id })
+                      // booking &&
+                      bookingCanceller.run({ timeSlotId: timeSlotId })
                     }
                     size="sm"
                     type="button"

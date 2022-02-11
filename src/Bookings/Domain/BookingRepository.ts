@@ -5,7 +5,7 @@ import { TimeSlot } from '@TimeSlots/Domain/TimeSlot';
 import { BookingPlain } from './BookingPlain';
 
 export interface BookingRepository {
-  save(timeSlot: TimeSlot): Promise<JSendResponse<null>>;
+  save(props: { timeSlotId: TimeSlot['id'] }): Promise<JSendResponse<null>>;
   delete(bookingId: Booking['id']): Promise<JSendResponse<null>>;
   findAllByCustomer(): Promise<JSendResponse<{ bookings: BookingPlain[] }>>;
 }

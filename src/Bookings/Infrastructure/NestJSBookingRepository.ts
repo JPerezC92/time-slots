@@ -26,9 +26,13 @@ export const NestJSBookingRepository: () => BookingRepository = () => {
 
       return result;
     },
-    save: async (timeSlot: TimeSlot): Promise<JSendResponse<null>> => {
+    save: async ({
+      timeSlotId,
+    }: {
+      timeSlotId: TimeSlot['id'];
+    }): Promise<JSendResponse<null>> => {
       const response = await fetch(BookingApiRoute.BOOKINGS, {
-        body: JSON.stringify({ timeSlotid: timeSlot.id }),
+        body: JSON.stringify({ timeSlotId }),
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
