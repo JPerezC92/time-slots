@@ -7,6 +7,7 @@ import {
 } from 'src/Auth/Infrastructure/ZustandAuthStore';
 import { AuthStore } from 'src/Auth/Domain/AuthStore';
 import { useLoginWithEmailAndPassword } from 'src/Auth/Infrastructure/hooks/useLoginWithEmailAndPassword';
+import { useLogout } from '@Auth/Infrastructure/hooks/useLogout';
 
 const selectLogout = (state: AuthStore) => state.logout;
 
@@ -40,8 +41,7 @@ const LoginForm: FC = () => {
 
 export const Layout: FC = ({ children }) => {
   const customer = useAuthMergedStore(selectCustomer);
-
-  const logout = useAuthMergedStore(selectLogout);
+  const { run: logoutRun } = useLogout();
 
   return (
     <Box
@@ -65,7 +65,7 @@ export const Layout: FC = ({ children }) => {
         {!customer.isLoggedIn ? (
           <LoginForm />
         ) : (
-          <Button type="button" bg="red.500" onClick={logout}>
+          <Button type="button" bg="red.500" onClick={logoutRun}>
             Logout
           </Button>
         )}
