@@ -1,7 +1,6 @@
 import { FC, useEffect } from 'react';
 import { Box, Button, Input } from '@chakra-ui/react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { googleAuth } from 'src/Shared/Infrastructure/firebase';
+
 import {
   AuthViewStore,
   useAuthMergedStore,

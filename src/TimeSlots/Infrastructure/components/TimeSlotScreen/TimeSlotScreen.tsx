@@ -3,28 +3,39 @@ import { FC, useEffect, useState } from 'react';
 
 import { MotorcyclistAvailableCounter } from '@Motorcyclists/Infrastructure/components/MotorcyclistAvailableCounter';
 import { TimeSlotRow } from '@TimeSlots/Infrastructure/components/TimeSlotRow';
-import { useAuthViewStore } from '@Auth/Infrastructure/ZustandAuthStore';
+import {
+  AuthViewStore,
+  useAuthMergedStore,
+  useAuthViewStore,
+} from '@Auth/Infrastructure/ZustandAuthStore';
 import { useBookingFinder } from '@Bookings/Infrastructure/controllers/useBookingFinder';
 import { useTimeSlotsFinder } from '@TimeSlots/Infrastructure/controllers/useTimeSlotsFinder';
 import { useTimeSlotViewStore } from '@TimeSlots/Infrastructure/ZustandTimeSlotStore';
+import { useFindUserInfo } from '@Auth/Infrastructure/hooks/useFindUserInfo';
+
+const selectTokenExists = (s: AuthViewStore) => s.tokenExists;
 
 export const TimeSlotScreen: FC = () => {
   const { customer } = useAuthViewStore();
   const { timeSlotCollection } = useTimeSlotViewStore();
   const { run: timeSlotsFinderRun } = useTimeSlotsFinder();
   const { run: bookingFinderRun } = useBookingFinder();
-
+  const { run: findUserInfoRun } = useFindUserInfo();
   const [disableWhileBooking, setDisableWhileBooking] = useState(false);
+
+  const tokenExists = useAuthMergedStore(selectTokenExists);
 
   useEffect(() => {
     timeSlotsFinderRun();
   }, [timeSlotsFinderRun, customer.isLoggedIn]);
 
   useEffect(() => {
-    if (customer.isLoggedIn) {
-      bookingFinderRun();
-    }
+    if (customer.isLoggedIn) bookingFinderRun();
   }, [bookingFinderRun, customer.isLoggedIn]);
+
+  useEffect(() => {
+    if (tokenExists) findUserInfoRun();
+  }, [findUserInfoRun, tokenExists]);
 
   return (
     <>

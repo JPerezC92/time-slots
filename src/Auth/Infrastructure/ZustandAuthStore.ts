@@ -13,9 +13,11 @@ import {
 } from '@Shared/Infrastructure/firebase';
 import { IsLoggedIn } from '@Customers/Domain/IsLoggedIn';
 import { LastName } from '@Customers/Domain/LastName';
+import { JsTokenCookieService } from './JsTokenCookieService';
 
 export interface AuthViewStore {
   customer: Customer;
+  tokenExists: boolean;
 }
 
 const guest = new Customer({
@@ -25,15 +27,13 @@ const guest = new Customer({
   isLoggedIn: new IsLoggedIn(false),
 });
 
+const jsTokenCookieService = JsTokenCookieService();
+
 export const useAuthMergedStore = create<AuthStore & AuthViewStore>((set) => ({
   customer: guest,
-  updateCustomer: (customer) => set({ customer: customer }),
-  logout: () => signOut(googleAuth).then(() => set({ customer: guest })),
-  login: async () => {
-    signInWithPopup(googleAuth, googleAuthProvider).catch(() =>
-      console.log('login error')
-    );
-  },
+  tokenExists: !!jsTokenCookieService.read(),
+  login: (customer) => set({ customer: customer }),
+  logout: () => set({ customer: guest }),
 }));
 
 export const useZustandAuthStore: () => AuthStore = () => {
@@ -42,7 +42,6 @@ export const useZustandAuthStore: () => AuthStore = () => {
       (state) => ({
         login: state.login,
         logout: state.logout,
-        updateCustomer: state.updateCustomer,
       }),
       []
     ),
@@ -53,7 +52,10 @@ export const useZustandAuthStore: () => AuthStore = () => {
 
 export const useAuthViewStore: () => AuthViewStore = () => {
   const authViewStore = useAuthMergedStore(
-    useCallback((state) => ({ customer: state.customer }), []),
+    useCallback(
+      (state) => ({ customer: state.customer, tokenExists: state.tokenExists }),
+      []
+    ),
     shallow
   );
   return authViewStore;
