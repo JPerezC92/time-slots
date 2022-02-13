@@ -1,43 +1,14 @@
-import { FC, useEffect } from 'react';
-import { Box, Button, Input } from '@chakra-ui/react';
+import { FC } from 'react';
+import { Box, Button, Divider } from '@chakra-ui/react';
 
 import {
   AuthViewStore,
   useAuthMergedStore,
-} from 'src/Auth/Infrastructure/ZustandAuthStore';
-import { AuthStore } from 'src/Auth/Domain/AuthStore';
-import { useLoginWithEmailAndPassword } from 'src/Auth/Infrastructure/hooks/useLoginWithEmailAndPassword';
+} from '@Auth/Infrastructure/ZustandAuthStore';
+import { LoginForm } from '@Auth/Infrastructure/components/LoginForm';
 import { useLogout } from '@Auth/Infrastructure/hooks/useLogout';
 
-const selectLogout = (state: AuthStore) => state.logout;
-
 const selectCustomer = (state: AuthViewStore) => state.customer;
-
-const LoginForm: FC = () => {
-  const { credentials, onChange, run } = useLoginWithEmailAndPassword();
-
-  return (
-    <>
-      <Input
-        id="email"
-        name="email"
-        onChange={onChange}
-        type="email"
-        value={credentials.email}
-      />
-      <Input
-        id="password"
-        name="password"
-        onChange={onChange}
-        type="password"
-        value={credentials.email}
-      />
-      <Button type="button" bg="blue.500" onClick={run}>
-        Login
-      </Button>
-    </>
-  );
-};
 
 export const Layout: FC = ({ children }) => {
   const customer = useAuthMergedStore(selectCustomer);
@@ -53,23 +24,26 @@ export const Layout: FC = ({ children }) => {
     >
       <Box
         as="nav"
-        display="flex"
-        // flexDirection="row-reverse"
-        justifyContent="flex-end"
         alignItems="center"
+        display="flex"
         gap="1rem"
+        justifyContent="flex-end"
         padding="0.5rem"
       >
-        <h1>{customer.isLoggedIn && customer.firstName}</h1>
-
-        {!customer.isLoggedIn ? (
-          <LoginForm />
+        {customer.isLoggedIn ? (
+          <>
+            <h1>{customer.firstName}</h1>
+            <Button type="button" bg="red.500" onClick={logoutRun}>
+              Logout
+            </Button>
+          </>
         ) : (
-          <Button type="button" bg="red.500" onClick={logoutRun}>
-            Logout
-          </Button>
+          <LoginForm />
         )}
       </Box>
+
+      <Divider />
+
       {children}
     </Box>
   );

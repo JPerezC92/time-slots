@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
+import { Box, Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 
 import { MotorcyclistAvailableCounter } from '@Motorcyclists/Infrastructure/components/MotorcyclistAvailableCounter';
 import { TimeSlotRow } from '@TimeSlots/Infrastructure/components/TimeSlotRow';
@@ -38,7 +38,7 @@ export const TimeSlotScreen: FC = () => {
   }, [findUserInfoRun, tokenExists]);
 
   return (
-    <>
+    <Box margin="1rem" display="flex" flexDirection="column" gap="1rem">
       <MotorcyclistAvailableCounter />
 
       <Table
@@ -76,6 +76,6 @@ export const TimeSlotScreen: FC = () => {
           ))}
         </Tbody>
       </Table>
-    </>
+    </Box>
   );
 };

@@ -10,7 +10,7 @@ export const useLogout = () => {
   const authStore = useRef(useAuthMergedStore());
 
   const run = useCallback(() => {
-    setIsLoading(true);
+    setIsLoading(() => true);
 
     const logout = Logout({
       authStore: authStore.current,
@@ -19,7 +19,7 @@ export const useLogout = () => {
 
     logout.execute();
 
-    setIsLoading(false);
+    setIsLoading(() => false);
   }, []);
 
   return {

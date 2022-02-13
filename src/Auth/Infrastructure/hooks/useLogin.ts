@@ -1,11 +1,20 @@
-import { ChangeEventHandler, useCallback, useRef, useState } from 'react';
+import {
+  ChangeEventHandler,
+  FormEvent,
+  FormEventHandler,
+  useCallback,
+  useRef,
+  useState,
+} from 'react';
 
 import { Credentials } from '@Auth/Domain/AuthRepository';
-import { LoginWithEmailAndPassword } from '@Auth/Application/LoginWithEmailAndPassword';
+import { Login } from '@Auth/Application/Login';
 import { NestJSAuthRepository } from '@Auth/Infrastructure/NestJSAuthRepository';
 import { useAuthMergedStore } from '@Auth/Infrastructure/ZustandAuthStore';
+import { JsTokenCookieService } from '../JsTokenCookieService';
 
-export const useLoginWithEmailAndPassword = () => {
+export const useLogin = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const zustandAuthStore = useRef(useAuthMergedStore());
 
   const [credentials, setCredentials] = useState<Credentials>({
@@ -20,16 +29,28 @@ export const useLoginWithEmailAndPassword = () => {
     setCredentials((s) => ({ ...s, [name]: value }));
   }, []);
 
-  return {
-    credentials,
-    onChange,
-    run: useCallback(() => {
-      const loginWithEmailAndPassword = LoginWithEmailAndPassword({
+  const run: FormEventHandler<HTMLFormElement> = useCallback(
+    async (event) => {
+      event.preventDefault();
+      setIsLoading(() => true);
+
+      const login = Login({
         authRepository: NestJSAuthRepository(),
         authStore: zustandAuthStore.current,
+        tokenCookieService: JsTokenCookieService(),
       });
 
-      loginWithEmailAndPassword.execute(credentials);
-    }, [credentials]),
+      await login.execute(credentials);
+
+      setIsLoading(() => false);
+    },
+    [credentials]
+  );
+
+  return {
+    credentials,
+    isLoading,
+    onChange,
+    run,
   };
 };
