@@ -15,20 +15,26 @@ export const LoginForm: FC = () => {
       justifyContent="flex-end"
     >
       <Input
+        list="emails"
         id="email"
         name="email"
         onChange={onChange}
         type="email"
         value={credentials.email}
       />
+      <datalist id="emails">
+        <option value="usuario01@gmail.com" />
+        <option value="usuario02@gmail.com" />
+      </datalist>
 
       <Input
         id="password"
         name="password"
         onChange={onChange}
-        type="text"
+        type="password"
         value={credentials.password}
       />
+
       <Button bg="blue.500" type="submit" minW="4rem">
         Login
       </Button>

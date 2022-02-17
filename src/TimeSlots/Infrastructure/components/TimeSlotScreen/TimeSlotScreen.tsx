@@ -4,7 +4,6 @@ import { Box, Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import { MotorcyclistAvailableCounter } from '@Motorcyclists/Infrastructure/components/MotorcyclistAvailableCounter';
 import { TimeSlotRow } from '@TimeSlots/Infrastructure/components/TimeSlotRow';
 import {
-  AuthViewStore,
   useAuthMergedStore,
   useAuthViewStore,
 } from '@Auth/Infrastructure/ZustandAuthStore';
@@ -12,8 +11,10 @@ import { useBookingFinder } from '@Bookings/Infrastructure/controllers/useBookin
 import { useTimeSlotsFinder } from '@TimeSlots/Infrastructure/controllers/useTimeSlotsFinder';
 import { useTimeSlotViewStore } from '@TimeSlots/Infrastructure/ZustandTimeSlotStore';
 import { useFindUserInfo } from '@Auth/Infrastructure/hooks/useFindUserInfo';
+import { useLogout } from '@Auth/Infrastructure/hooks/useLogout';
+import { AuthStore } from '@Auth/Domain/AuthStore';
 
-const selectTokenExists = (s: AuthViewStore) => s.tokenExists;
+const selectTokenExists = (s: AuthStore) => s.tokenExists;
 
 export const TimeSlotScreen: FC = () => {
   const { customer } = useAuthViewStore();
@@ -21,6 +22,7 @@ export const TimeSlotScreen: FC = () => {
   const { run: timeSlotsFinderRun } = useTimeSlotsFinder();
   const { run: bookingFinderRun } = useBookingFinder();
   const { run: findUserInfoRun } = useFindUserInfo();
+  const { run: logoutRun } = useLogout();
   const [disableWhileBooking, setDisableWhileBooking] = useState(false);
 
   const tokenExists = useAuthMergedStore(selectTokenExists);
@@ -34,8 +36,14 @@ export const TimeSlotScreen: FC = () => {
   }, [bookingFinderRun, customer.isLoggedIn]);
 
   useEffect(() => {
-    if (tokenExists) findUserInfoRun();
+    if (tokenExists()) findUserInfoRun();
+    // if (!tokenExists) console.log('Token no existe');
+    // decodeURIComponent(document.cookie);
   }, [findUserInfoRun, tokenExists]);
+
+  // useEffect(() => {
+  //   if (!tokenExists) logoutRun();
+  // }, [logoutRun, tokenExists]);
 
   return (
     <Box margin="1rem" display="flex" flexDirection="column" gap="1rem">

@@ -26,6 +26,7 @@ export const NestJSBookingRepository: () => BookingRepository = () => {
 
       return result;
     },
+
     save: async ({
       timeSlotId,
     }: {

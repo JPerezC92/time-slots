@@ -14,11 +14,10 @@ import { useAuthMergedStore } from '@Auth/Infrastructure/ZustandAuthStore';
 import { JsTokenCookieService } from '../JsTokenCookieService';
 
 export const useLogin = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const zustandAuthStore = useRef(useAuthMergedStore());
 
   const [credentials, setCredentials] = useState<Credentials>({
-    email: 'jperez.c92@gmail.com',
+    email: '',
     password: '123456789',
   });
 
@@ -32,7 +31,6 @@ export const useLogin = () => {
   const run: FormEventHandler<HTMLFormElement> = useCallback(
     async (event) => {
       event.preventDefault();
-      setIsLoading(() => true);
 
       const login = Login({
         authRepository: NestJSAuthRepository(),
@@ -41,15 +39,12 @@ export const useLogin = () => {
       });
 
       await login.execute(credentials);
-
-      setIsLoading(() => false);
     },
     [credentials]
   );
 
   return {
     credentials,
-    isLoading,
     onChange,
     run,
   };

@@ -9,12 +9,15 @@ import { useAlertStore } from '@UI/Alert/Alert';
 import { useMotorcyclistMergedStore } from '@Motorcyclists/Infrastructure/useMotorcyclistStore';
 import { useTimeSlotMergedStore } from '@TimeSlots/Infrastructure/ZustandTimeSlotStore';
 import { useBookingMergerStore } from '../ZustandBookingStore';
+import { useAuthMergedStore } from '@Auth/Infrastructure/ZustandAuthStore';
+import { JsTokenCookieService } from '@Auth/Infrastructure/JsTokenCookieService';
 
 export const useBookingCreator = () => {
   const { addAlert } = useAlertStore();
   const bookingStore = useRef(useBookingMergerStore());
   const motorcyclistStore = useRef(useMotorcyclistMergedStore());
   const timeSlotStore = useRef(useTimeSlotMergedStore());
+  const authStore = useRef(useAuthMergedStore());
 
   const [error, setError] = useState<DomainException>();
   const [isLoading, setIsLoading] = useState(false);
@@ -23,12 +26,14 @@ export const useBookingCreator = () => {
     setIsLoading(() => true);
 
     const bookingCreator = BookingCreator({
+      authStore: authStore.current,
       bookingRepository: NestJSBookingRepository(),
       bookingStore: bookingStore.current,
       motorcyclistRepository: NestJSMotorcyclistRepository(),
       motorcyclistStore: motorcyclistStore.current,
       timeSlotRepository: NestJSTimeSlotRepository(),
       timeSlotStore: timeSlotStore.current,
+      tokenCookieService: JsTokenCookieService(),
     });
 
     await bookingCreator.execute({ timeSlotId });
