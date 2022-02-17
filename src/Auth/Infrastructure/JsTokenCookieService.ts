@@ -2,6 +2,7 @@ import Cookies from 'js-cookie';
 
 import { TokenCookieService } from '@Auth/Domain/TokenCookieService';
 
+const minuteInMiliseconds = 60000;
 const hourInMiliseconds = 1000 * 60 * 60;
 const validTime = hourInMiliseconds * 4;
 
@@ -13,7 +14,9 @@ export const JsTokenCookieService: () => TokenCookieService = () => {
       Cookies.set(TOKEN_COOKIE_NAME, value, {
         secure: false,
         path: '/',
-        expires: new Date(new Date().getTime() + 60000),
+        expires: new Date(
+          new Date().getTime() + validTime - minuteInMiliseconds
+        ),
         sameSite: 'strict',
       });
     },
