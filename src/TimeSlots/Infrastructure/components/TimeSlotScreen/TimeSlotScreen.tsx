@@ -37,13 +37,7 @@ export const TimeSlotScreen: FC = () => {
 
   useEffect(() => {
     if (tokenExists()) findUserInfoRun();
-    // if (!tokenExists) console.log('Token no existe');
-    // decodeURIComponent(document.cookie);
   }, [findUserInfoRun, tokenExists]);
-
-  // useEffect(() => {
-  //   if (!tokenExists) logoutRun();
-  // }, [logoutRun, tokenExists]);
 
   return (
     <Box margin="1rem" display="flex" flexDirection="column" gap="1rem">

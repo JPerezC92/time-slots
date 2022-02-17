@@ -1,6 +1,5 @@
 import {
   ChangeEventHandler,
-  FormEvent,
   FormEventHandler,
   useCallback,
   useRef,
@@ -8,13 +7,16 @@ import {
 } from 'react';
 
 import { Credentials } from '@Auth/Domain/AuthRepository';
+import { JsTokenCookieService } from '../JsTokenCookieService';
 import { Login } from '@Auth/Application/Login';
 import { NestJSAuthRepository } from '@Auth/Infrastructure/NestJSAuthRepository';
+import { NestJSBookingRepository } from '@Bookings/Infrastructure/NestJSBookingRepository';
 import { useAuthMergedStore } from '@Auth/Infrastructure/ZustandAuthStore';
-import { JsTokenCookieService } from '../JsTokenCookieService';
+import { useBookingMergerStore } from '@Bookings/Infrastructure/ZustandBookingStore';
 
 export const useLogin = () => {
-  const zustandAuthStore = useRef(useAuthMergedStore());
+  const authStore = useRef(useAuthMergedStore());
+  const bookingStore = useRef(useBookingMergerStore());
 
   const [credentials, setCredentials] = useState<Credentials>({
     email: '',
@@ -34,7 +36,9 @@ export const useLogin = () => {
 
       const login = Login({
         authRepository: NestJSAuthRepository(),
-        authStore: zustandAuthStore.current,
+        authStore: authStore.current,
+        bookingRepository: NestJSBookingRepository(),
+        bookingStore: bookingStore.current,
         tokenCookieService: JsTokenCookieService(),
       });
 
