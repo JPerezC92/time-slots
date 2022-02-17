@@ -7,7 +7,6 @@ import {
 } from 'react';
 
 import { Credentials } from '@Auth/Domain/AuthRepository';
-import { JsTokenCookieService } from '../JsTokenCookieService';
 import { Login } from '@Auth/Application/Login';
 import { NestJSAuthRepository } from '@Auth/Infrastructure/NestJSAuthRepository';
 import { NestJSBookingRepository } from '@Bookings/Infrastructure/NestJSBookingRepository';
@@ -39,7 +38,6 @@ export const useLogin = () => {
         authStore: authStore.current,
         bookingRepository: NestJSBookingRepository(),
         bookingStore: bookingStore.current,
-        tokenCookieService: JsTokenCookieService(),
       });
 
       await login.execute(credentials);

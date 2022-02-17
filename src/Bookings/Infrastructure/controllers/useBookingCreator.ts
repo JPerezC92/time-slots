@@ -6,11 +6,10 @@ import { NestJSBookingRepository } from '@Bookings/Infrastructure/NestJSBookingR
 import { NestJSMotorcyclistRepository } from '@Motorcyclists/Infrastructure/NestJSMotorcyclistRepository';
 import { NestJSTimeSlotRepository } from '@TimeSlots/Infrastructure/NestJSTimeSlotRepository';
 import { useAlertStore } from '@UI/Alert/Alert';
+import { useAuthMergedStore } from '@Auth/Infrastructure/ZustandAuthStore';
+import { useBookingMergerStore } from '../ZustandBookingStore';
 import { useMotorcyclistMergedStore } from '@Motorcyclists/Infrastructure/useMotorcyclistStore';
 import { useTimeSlotMergedStore } from '@TimeSlots/Infrastructure/ZustandTimeSlotStore';
-import { useBookingMergerStore } from '../ZustandBookingStore';
-import { useAuthMergedStore } from '@Auth/Infrastructure/ZustandAuthStore';
-import { JsTokenCookieService } from '@Auth/Infrastructure/JsTokenCookieService';
 
 export const useBookingCreator = () => {
   const { addAlert } = useAlertStore();
@@ -33,7 +32,6 @@ export const useBookingCreator = () => {
       motorcyclistStore: motorcyclistStore.current,
       timeSlotRepository: NestJSTimeSlotRepository(),
       timeSlotStore: timeSlotStore.current,
-      tokenCookieService: JsTokenCookieService(),
     });
 
     await bookingCreator.execute({ timeSlotId });

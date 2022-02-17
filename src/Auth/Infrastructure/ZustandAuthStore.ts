@@ -23,12 +23,18 @@ const guest = new Customer({
 
 const jsTokenCookieService = JsTokenCookieService();
 
-export const useAuthMergedStore = create<AuthStore & AuthViewStore>((set) => ({
-  customer: guest,
-  tokenExists: () => !!jsTokenCookieService.read(),
-  login: (customer) => set({ customer: customer }),
-  logout: () => set({ customer: guest }),
-}));
+export const useAuthMergedStore = create<AuthStore & AuthViewStore>(
+  (set, get) => ({
+    customer: guest,
+    tokenExists: () => !!jsTokenCookieService.read(),
+    removeAccessToken: () => jsTokenCookieService.delete(),
+    login: (customer) => set({ customer: customer }),
+    logout: () => {
+      set({ customer: guest });
+      get().removeAccessToken();
+    },
+  })
+);
 
 export const useAuthViewStore: () => AuthViewStore = () => {
   const authViewStore = useAuthMergedStore(

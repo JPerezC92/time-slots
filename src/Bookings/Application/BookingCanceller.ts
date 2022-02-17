@@ -21,7 +21,6 @@ export const BookingCanceller: (props: {
   motorcyclistStore: MotorcyclistStore;
   timeSlotRepository: TimeSlotRepository;
   timeSlotStore: TimeSlotStore;
-  tokenCookieService: TokenCookieService;
 }) => UseCase<Promise<void>, { timeSlotId: string }> = ({
   authStore,
   bookingRepository,
@@ -30,7 +29,6 @@ export const BookingCanceller: (props: {
   motorcyclistStore,
   timeSlotRepository,
   timeSlotStore,
-  tokenCookieService,
 }) => {
   const timeSlotFinder = TimeSlotFinder({ timeSlotRepository, timeSlotStore });
   const bookingFinder = BookingFinder({ bookingRepository, bookingStore });
@@ -39,7 +37,7 @@ export const BookingCanceller: (props: {
     motorcyclistStore,
   });
 
-  const logout = Logout({ authStore, tokenCookieService });
+  const logout = Logout({ authStore });
 
   return {
     execute: async ({ timeSlotId }): Promise<void> => {

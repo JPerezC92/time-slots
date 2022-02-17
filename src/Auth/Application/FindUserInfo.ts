@@ -13,13 +13,11 @@ export const FindUserInfo: (props: {
   authStore: AuthStore;
   bookingRepository: BookingRepository;
   bookingStore: BookingStore;
-  tokenCookieService: TokenCookieService;
 }) => UseCase<Promise<void>> = ({
   authRepository,
   authStore,
   bookingRepository,
   bookingStore,
-  tokenCookieService,
 }) => {
   const bookingFinder = BookingFinder({ bookingRepository, bookingStore });
 
@@ -28,7 +26,7 @@ export const FindUserInfo: (props: {
       const userInfoResult = await authRepository.userInfo();
 
       if (userInfoResult.status !== ResultStatus.SUCCESS) {
-        return tokenCookieService.delete();
+        return authStore.removeAccessToken();
       }
 
       authStore.login(

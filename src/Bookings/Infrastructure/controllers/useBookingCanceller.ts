@@ -28,7 +28,6 @@ export const useBookingCanceller = () => {
       motorcyclistStore: motorcyclistStore.current,
       timeSlotRepository: NestJSTimeSlotRepository(),
       timeSlotStore: timeSlotStore.current,
-      tokenCookieService: JsTokenCookieService(),
     });
 
     await bookingCanceller.execute({ timeSlotId });

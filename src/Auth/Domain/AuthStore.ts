@@ -5,4 +5,5 @@ export interface AuthStore {
   login: (customer: Customer) => void;
   tokenExists: () => boolean;
   // getToken: () => string | undefined;
+  removeAccessToken: () => void;
 }
