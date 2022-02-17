@@ -5,11 +5,7 @@ import { useMotorcyclistViewStore } from '@Motorcyclists/Infrastructure/useMotor
 
 export const MotorcyclistAvailableCounter: FC = () => {
   const { isLoading, run } = useMotorcyclistFinder();
-  const { motorcyclistList } = useMotorcyclistViewStore();
-
-  const motorcyclistCount = motorcyclistList.filter(
-    (m) => m.isAvailable
-  ).length;
+  const { available } = useMotorcyclistViewStore();
 
   useEffect(() => {
     run();
@@ -17,7 +13,7 @@ export const MotorcyclistAvailableCounter: FC = () => {
 
   return (
     <div>
-      <h1>Motorcyclistas disponibles: {!isLoading && motorcyclistCount} </h1>
+      <h1>Motorcyclistas disponibles: {!isLoading && available} </h1>
     </div>
   );
 };

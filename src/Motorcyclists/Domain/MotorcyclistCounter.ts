@@ -1,9 +1,7 @@
 import { Motorcyclist } from './Motorcyclist';
 
-export class MotorcyclistCounter {
-  public availableCount(motorcyclistCollection: Motorcyclist[]): number {
-    return motorcyclistCollection.filter(
-      (motorcyclist) => motorcyclist.isAvailable
-    ).length;
+export class MotorcyclistService {
+  public countAvailable(motorcyclistList: Motorcyclist[]): number {
+    return motorcyclistList.filter((m) => m.isAvailable).length;
   }
 }

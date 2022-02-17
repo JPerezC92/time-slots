@@ -12,10 +12,7 @@ export const useLogout = () => {
   const run = useCallback(() => {
     setIsLoading(() => true);
 
-    const logout = Logout({
-      authStore: authStore.current,
-      tokenCookieService: JsTokenCookieService(),
-    });
+    const logout = Logout({ authStore: authStore.current });
 
     logout.execute();
 

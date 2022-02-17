@@ -50,32 +50,4 @@ export class Customer {
       isLoggedIn: new IsLoggedIn(props.isLoggedIn),
     });
   }
-
-  public Book({
-    motorcyclist,
-    timeSlot,
-  }: {
-    motorcyclist: Motorcyclist;
-    timeSlot: TimeSlot;
-  }): Booking {
-    timeSlot.book();
-    motorcyclist.assignTimeSlot(timeSlot);
-
-    return Booking.new({
-      customerId: new CustomerId(this.id),
-      motorcyclistId: new MotorcyclistId(motorcyclist.id),
-      timeSlotId: new TimeSlotId(timeSlot.id),
-    });
-  }
-
-  public CancelBooking({
-    motorcyclist,
-    timeSlot: timeslot,
-  }: {
-    motorcyclist: Motorcyclist;
-    timeSlot: TimeSlot;
-  }): void {
-    motorcyclist.unassignTimeSlot(timeslot);
-    timeslot.CancelBooking();
-  }
 }

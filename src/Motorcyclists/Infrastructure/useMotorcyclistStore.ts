@@ -1,21 +1,21 @@
-import { Motorcyclist } from '@Motorcyclists/Domain/Motorcyclist';
 import { useCallback } from 'react';
 import create from 'zustand';
 import shallow from 'zustand/shallow';
 
-import { MotorcyclistStore } from '../Domain/MotorcyclistStore';
+import { MotorcyclistStore } from '@Motorcyclists/Domain/MotorcyclistStore';
+import { Motorcyclist } from '@Motorcyclists/Domain/Motorcyclist';
 
 interface MotorcyclistViewStore {
   motorcyclistList: Motorcyclist[];
-  count: number;
+  available: number;
 }
 
 export const useMotorcyclistMergedStore = create<
   MotorcyclistViewStore & MotorcyclistStore
 >((set) => ({
   motorcyclistList: [],
-  count: 0,
-  updateCount: (number) => set({ count: number }),
+  available: 0,
+  updateCount: (number) => set({ available: number }),
   save: (motorcyclistList) => set({ motorcyclistList }),
 }));
 
@@ -24,7 +24,7 @@ export const useMotorcyclistViewStore: () => MotorcyclistViewStore = () => {
     useMotorcyclistMergedStore<MotorcyclistViewStore>(
       useCallback(
         (state) => ({
-          count: state.count,
+          available: state.available,
           motorcyclistList: state.motorcyclistList,
         }),
         []
@@ -32,12 +32,4 @@ export const useMotorcyclistViewStore: () => MotorcyclistViewStore = () => {
       shallow
     );
   return motorcyclisViewtStore;
-};
-
-export const useZustandMotorcyclistStore: () => MotorcyclistStore = () => {
-  const motorcyclistStore = useMotorcyclistMergedStore<MotorcyclistStore>(
-    useCallback((state) => ({ updateCount: state.updateCount }), []),
-    shallow
-  );
-  return motorcyclistStore;
 };

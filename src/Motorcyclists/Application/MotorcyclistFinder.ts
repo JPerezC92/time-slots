@@ -3,11 +3,14 @@ import { Motorcyclist } from '@Motorcyclists/Domain/Motorcyclist';
 import { MotorcyclistStore } from '@Motorcyclists/Domain/MotorcyclistStore';
 import { ResultStatus } from '@Shared/Domain/ResultStatus';
 import { UseCase } from '@Shared/Domain/UseCase';
+import { MotorcyclistService } from '@Motorcyclists/Domain/MotorcyclistCounter';
 
 export const MotorcyclistFinder: (props: {
   motorcyclistRepository: MotorcyclistRepository;
   motorcyclistStore: MotorcyclistStore;
 }) => UseCase<void> = ({ motorcyclistRepository, motorcyclistStore }) => {
+  const motorcyclistService = new MotorcyclistService();
+
   return {
     execute: async () => {
       const result = await motorcyclistRepository.findAll();
@@ -20,6 +23,9 @@ export const MotorcyclistFinder: (props: {
       );
 
       motorcyclistStore.save(motorcyclistList);
+      motorcyclistStore.updateCount(
+        motorcyclistService.countAvailable(motorcyclistList)
+      );
     },
   };
 };
